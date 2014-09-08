@@ -1,0 +1,47 @@
+ls
+cd ~/.emacs.d/ 
+ls
+find-file config/emacs_cpp_init.el 
+touch emacs_py_init.el
+touch emacs_lisp_init.el
+find-file emacs_py_init.el 
+find-file config/misc_settings.el 
+find-file emacs_lisp_init.el
+ls
+mv emacs_py_init.el config/
+ls
+mv emacs_lisp_init.el config/
+ls
+clear
+find-file ~/.emacs.d/config/misc_settings.el 
+find-file ~/.emacs
+ls
+ls
+find-file .emacs.d/config/emacs_lisp_init.el 
+find-file .emacs.d/config/emacs_py_init.el 
+find-file .emacs.d/config/emacs_cpp_init.el 
+find-file .emacs
+find-file .emacs.d/config/init_load_package.el
+find-file ../config/init_load_package.el 
+find-file ../../.emacs
+find-file ../config/misc_settings.el 
+ls
+cd ~/Dev/
+ls
+touch test.cpp
+find-file test.cpp 
+cd ~/.emacs.d/
+ls
+ls eshell/
+cd packages/
+ls
+cd ..
+find-file ../.emacs 
+find-file config/emacs_cpp_init.el 
+find-file ~/.emacs.d/config/misc_settings.el 
+find-file ~/.emacs.d/config/init_load_package.el 
+g++
+g++ -version
+g++ --version
+g++-4.9
+g++-4.9 --version

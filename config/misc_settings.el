@@ -9,8 +9,8 @@
 (setq inhibit-startup-message t)
 
 ; Stop producing autosave(#) and backup(~) files
-(setq auto-save-default nil)
-(setq make-backup-files nil)
+(setq auto-save-default nil
+      make-backup-files nil)
 
 ; Stop making sounds
 (setq ring-bell-function (lambda()))
@@ -26,6 +26,10 @@
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
+
+; Display column and line numbers
+(setq line-number-mode t
+      column-number-mode t)
  
 ; Syntax highlighting
 (global-font-lock-mode t)
@@ -36,28 +40,14 @@
 ; Change buffer listing to ibuffer
 (defalias 'list-buffers 'ibuffer)
 
-; Change buffer switching system
-; credit: http://stackoverflow.com/questions/7394289/how-can-i-more-easily-switch-between-buffers-in-emacs
-(iswitchb-mode 1)
-(setq iswitchb-buffer-ignore '("^ "
-			       "*Completions*"
-			       "*Shell Command Output*"
-			       "*Messages*"
-			       "Async Shell Command")
-)
-
 ; No tab indents
 (setq-default indent-tabs-mode nil)
 
-; Awesome scheme: Zenburn
+; Emacs themes
 ; ---------------------------------------------------------------------------
 ; credit (and pull): https://github.com/bbatsov/zenburn-emacs(.git)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'zenburn t)
-
-; Dired Mode
-; ---------------------------------------------------------------------------
-; TODO
+(load-theme 'solarized-light t)
 
 ; Hippie-expand
 ; ---------------------------------------------------------------------------
@@ -116,7 +106,7 @@
 (require 'fill-column-indicator)
 
 (setq-default fill-column 80)
-(setq fci-rule-color "white")
+(setq fci-rule-color "black")
 (setq fci-rule-width 5)
 
 (add-hook 'c-mode-common-hook   (lambda () (fci-mode 1) ))
@@ -146,21 +136,6 @@
 (setq company-echo-delay 0)
 ; start autocompletion only after typing
 (setq company-begin-commands '(self-insert-command))
-; include paths to some important headers
-(setq company-clang-arguments '("-I /usr/include"
-				"-I /Users/ptran516/Dev/dlib"
-				)
-)
-
-; Smex 
-; (M-x enhancement)
-; ---------------------------------------------------------------------------
-(require 'smex)
-(autoload 'smex "smex"
-  "Smex is a M-x enhancement for Emacs, it provides a convenient interface to
-your recently and most frequently used commands.")
-
-(global-set-key (kbd "M-x") 'smex)
 
 ; Popwin
 ; ---------------------------------------------------------------------------
@@ -168,5 +143,47 @@ your recently and most frequently used commands.")
 (popwin-mode 1)
 
 ; Helm
+; (Incremental completion and selection narrowing framework)
+; Credit: tuhdo.github.io/helm-intro.html
 ; ---------------------------------------------------------------------------
-; TODO
+(require 'helm)
+(require 'helm-config)
+(require 'helm-eshell)
+(require 'helm-files)
+(require 'helm-grep)
+
+;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-quick-update                     t ; do not display invisible candidates
+      helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+      helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
+      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+      helm-ff-file-name-history-use-recentf t)
+
+(helm-mode 1)
+
+; Get popwin to display helm pages
+; credit: https://gist.github.com/syl20bnr/5516054
+(setq display-buffer-function 'popwin:display-buffer)
+(push '("^\*helm .+\*$" :regexp t) popwin:special-display-config)
+(push '("^\*helm-.+\*$" :regexp t) popwin:special-display-config)
+
+; man pages
+(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)

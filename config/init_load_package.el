@@ -19,11 +19,6 @@
 ; pull: https://github.com/emacsmirror/undo-tree.git
 (add-to-list 'load-path "~/.emacs.d/packages/undo-tree")
 
-; Smex
-; ---------------------------------------------------------------------------
-; pull: https://github.com/nonsequitur/smex.git
-(add-to-list 'load-path "~/.emacs.d/packages/smex")
-
 ; Popwin
 ; ---------------------------------------------------------------------------
 ; pull: https://github.com/m2ym/popwin-el.git

@@ -45,3 +45,23 @@ g++ -version
 g++ --version
 g++-4.9
 g++-4.9 --version
+cd ~/Projects/ 
+ls
+find-file test.cpp 
+load-file ~/.emacs
+load-file ~/.emacs 
+load-file ~/.emacs 
+load-file ~/.emacs 
+load-file ~/.emacs
+ls
+cd ..
+rm -rf packages/smex/
+ls packages/
+load-file ~/.emacs.d/
+load-file ~/.emacs
+load-file ~/.emacs
+load-file ~/.emacs
+load-file ~/.emacs
+load-file ~/.emacs
+load-file ~/.emacs
+load-file ~/.emacs

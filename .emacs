@@ -2,10 +2,10 @@
 
 ; Load packages
 (load "~/.emacs.d/config/init_load_package.el")
-; Load keybindings
-(load "~/.emacs.d/config/init_keybinding.el")
 ; Load misc settings
 (load "~/.emacs.d/config/misc_settings.el")
+; Load keybindings
+(load "~/.emacs.d/config/init_keybinding.el")
 ; Load C++ settings
 (load "~/.emacs.d/config/emacs_cpp_init")
 ; Load lisp settings

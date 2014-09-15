@@ -5,8 +5,8 @@
 ; Highlight parentheses
 ; ---------------------------------------------------------------------------
 ; pull (highlight-parenthesis): https://github.com/nschum/highlight-parentheses.el.git
-; pull (autopair): https://github.com/capitaomorte/autopair.git
 (add-to-list 'load-path "~/.emacs.d/packages/highlight-parentheses")
+; pull (autopair): https://github.com/capitaomorte/autopair.git
 (add-to-list 'load-path "~/.emacs.d/packages/autopair")
 
 ; Fill Column Indicator
@@ -28,6 +28,9 @@
 ; ---------------------------------------------------------------------------
 ; pull: https://github.com/emacs-helm/helm.git
 (add-to-list 'load-path "~/.emacs.d/packages/helm")
+; -gtags
+; pull: https://github.com/syohex/emacs-helm-gtags.git
+(add-to-list 'load-path "~/.emacs.d/packages/emacs-helm-gtags")
 
 ; ===========================================================================
 ;                           C++ SETTINGS

@@ -65,3 +65,58 @@ load-file ~/.emacs
 load-file ~/.emacs
 load-file ~/.emacs
 load-file ~/.emacs
+cd ..
+ls
+ls ~/Projects/
+mv ~/Projects/ ./projects
+ls
+cd projects/ 
+ls
+find-file ~/.bash_profile 
+source ~/.bash_profile 
+ls
+touch about.html
+find-file about.html 
+cd ~/dev/
+ls
+ls
+ls
+cd projects/
+ls
+cd ..
+ls
+mkdir data
+cd data/
+mv ~/Downloads/VOCtrainval_06-Nov-2007.tar .
+ls
+tar xvf VOCtrainval_06-Nov-2007.tar 
+ls
+rm VOCtrainval_06-Nov-2007.tar 
+ls
+cd VOCdevkit/
+ld
+ls
+cd VOC2007/
+ls
+cd ImageSets/
+ls
+cd ..
+cd JPEGImages/ 
+ls
+cd ..
+ls
+cd Annotations/
+ls
+cd ~/Dev
+ls
+cd ..
+cd dev/
+ls
+cd src/
+ls
+rm real_time_video.cpp 
+ls
+ls
+cd ..
+ls
+cd src

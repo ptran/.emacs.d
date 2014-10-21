@@ -12,6 +12,8 @@
 
 (global-set-key (kbd "C-x C-c") 'ask-before-closing)
 
+;;;; Useful emacs commands
+; ---------------------------------------------------------------------------
 (global-set-key (kbd "C-c s") 'eshell)
 (global-set-key (kbd "C-x C-g") 'goto-line)
 

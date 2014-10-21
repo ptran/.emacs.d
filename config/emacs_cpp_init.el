@@ -1,4 +1,4 @@
-;;;; C++ emacs files
+;;;; C++ emacs file
 
 ; Indentation preferences
 (setq c-default-style "stroustrup"

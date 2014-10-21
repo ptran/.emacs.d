@@ -47,11 +47,21 @@
 (semantic-mode 1)
 (global-semantic-stickyfunc-mode 1)
 
+; Add cmake to the mode list.
+(setq auto-mode-alist
+  (append
+   '(("CMakeLists\\.txt\\'" . cmake-mode))
+   '(("\\.cmake\\'" . cmake-mode))
+   auto-mode-alist))
+
+; Change this to where cmake-mode.el is in your system
+(autoload 'cmake-mode "/usr/local/Cellar/cmake/3.0.2/share/cmake/editors/emacs/cmake-mode.el" t)
+
 ; Emacs themes
 ; ---------------------------------------------------------------------------
 ; credit (and pull): https://github.com/bbatsov/zenburn-emacs(.git)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'solarized-light t)
+(load-theme 'solarized-dark t)
 
 ; Hippie-expand
 ; ---------------------------------------------------------------------------
@@ -105,7 +115,7 @@
 
 (global-highlight-parentheses-mode t)
 
-; Fill Column Indicator
+;;;; Fill Column Indicator
 ; ---------------------------------------------------------------------------
 (require 'fill-column-indicator)
 
@@ -124,7 +134,7 @@
 (require 'undo-tree)
 (global-undo-tree-mode t)
 
-; Company 
+;;;; Company 
 ; (Auto-completion system)
 ; ---------------------------------------------------------------------------
 (require 'company)
@@ -134,6 +144,8 @@
 (setq company-tooltip-limit 20)
 ; decrease delay before autocompletion popup shows
 (setq company-idle-delay .3)
+; increase duration before timeout
+(setq company-async-timeout 4)
 ; require three letters before popup
 (setq company-minimum-prefix-length 3)
 ; remove blinking
@@ -141,12 +153,12 @@
 ; start autocompletion only after typing
 (setq company-begin-commands '(self-insert-command))
 
-; Popwin
+;;;; Popwin
 ; ---------------------------------------------------------------------------
 (require 'popwin)
 (popwin-mode 1)
 
-; Helm
+;;;; Helm
 ; (Incremental completion and selection narrowing framework)
 ; Credit: tuhdo.github.io/helm-intro.html
 ; ---------------------------------------------------------------------------

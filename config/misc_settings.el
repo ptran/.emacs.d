@@ -116,7 +116,7 @@
 (require 'fill-column-indicator)
 
 (setq-default fill-column 80)
-(setq fci-rule-color "black")
+(setq fci-rule-color "gray")
 (setq fci-rule-width 5)
 
 (add-hook 'c-mode-common-hook   (lambda () (fci-mode 1) ))
@@ -129,6 +129,12 @@
 ;; ---------------------------------------------------------------------------
 (require 'undo-tree)
 (global-undo-tree-mode t)
+
+(defadvice undo-tree-visualize (around undo-tree-split-side-by-side activate)
+  "Split undo-tree side-by-side"
+  (let ((split-height-threshold nil)
+        (split-width-threshold 0))
+  ad-do-it))
 
 ;;;; Company 
 ;; (Auto-completion system)
@@ -148,11 +154,6 @@
 (setq company-echo-delay 0)
 ;; start autocompletion only after typing
 (setq company-begin-commands '(self-insert-command))
-
-;;;; Popwin
-;; ---------------------------------------------------------------------------
-(require 'popwin)
-(popwin-mode 1)
 
 ;;;; Helm
 ;; (Incremental completion and selection narrowing framework)
@@ -176,13 +177,6 @@
 
 (helm-mode 1)
 
-;; Get popwin to display helm pages
-;; ---------------------------------------------------------------------------
-;; credit: https://gist.github.com/syl20bnr/5516054
-(setq display-buffer-function 'popwin:display-buffer)
-(push '("^\*helm .+\*$" :regexp t) popwin:special-display-config)
-(push '("^\*helm-.+\*$" :regexp t) popwin:special-display-config)
-
 ;; man pages
 (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 
@@ -192,7 +186,7 @@
  helm-gtags-auto-update t
  helm-gtags-use-input-at-cursor t
  helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "\C-c g"
+ helm-gtags-prefix-key "\C-cg"
  helm-gtags-suggested-key-mapping t
  )
 
@@ -203,3 +197,19 @@
 (add-hook 'c++-mode-hook 'helm-gtags-mode)
 (add-hook 'java-mode-hook 'helm-gtags-mode)
 (add-hook 'python-mode-hook 'helm-gtags-mode)
+
+;;;; Popwin
+;; ---------------------------------------------------------------------------
+(require 'popwin)
+(popwin-mode 1)
+
+;; Get popwin to display helm pages
+;; ---------------------------------------------------------------------------
+;; credit: https://gist.github.com/syl20bnr/5516054
+(setq display-buffer-function 'popwin:display-buffer)
+(push '("^\*helm .+\*$" :regexp t) popwin:special-display-config)
+(push '("^\*helm-.+\*$" :regexp t) popwin:special-display-config)
+
+;; magit display<
+(push '("^\*magit .+\*$" :regexp t) popwin:special-display-config)
+(push '("^\*magit-.+\*$" :regexp t) popwin:special-display-config)

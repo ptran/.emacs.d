@@ -1,21 +1,19 @@
 # Introduction
 
-This is my emacs configuration repo. I am currently using the combination of
-[Cask](https://github.com/cask/cask) and
-[Pallet](https://github.com/rdallasgray/pallet) to manage my emacs packages. I
-have made a copy of my .emacs file within the main folder. However, most of my
-settings have been distributed to different el files in the config folder.
+This is my personal dot-emacs-dot-d directory. All my configurations can be
+found in the init.el and all the el files within the config directory. I am
+currently using the combination of [Cask](https://github.com/cask/cask) and
+[Pallet](https://github.com/rdallasgray/pallet) for package management.
 
-The focus of the configuration has been on C++ and Python development, but I
-plan on expanding it to other languages such as Java and Julia in the near
-future.
+Most of the packages and settings I have are for C++ and Python development, but
+I plan on setting up environments for Java and LateX soon.
 
 ## Dependencies
 
-* emacs >24.3
-* Python >2.6
- * ropemacs
-* clang
+* _emacs >24.3_
+* _Python >2.6_
+ * _rope + ropemacs_
+* _libclang_
 
 These emacs settings have been verified to work on __Mac OS X Mavericks__ and
 __CentOS 6__.

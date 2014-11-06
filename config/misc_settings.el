@@ -198,6 +198,23 @@
 (add-hook 'java-mode-hook 'helm-gtags-mode)
 (add-hook 'python-mode-hook 'helm-gtags-mode)
 
+;;;; Projectile
+;; ---------------------------------------------------------------------------
+(require 'projectile)
+(projectile-global-mode)
+
+;; use helm for all things projectile
+(setq projectile-completion-system 'helm)
+
+;; use other resources aside from elisp to index items
+(setq projectile-indexing-method 'alien)
+
+;; display  projects, and then files in a chosen project
+(setq helm-projectile-sources-list '(helm-source-projectile-projects
+                                     helm-source-projectile-files-list))
+
+(setq projectile-switch-project-action 'helm-projectile)
+
 ;;;; Popwin
 ;; ---------------------------------------------------------------------------
 (require 'popwin)

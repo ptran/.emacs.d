@@ -19,7 +19,6 @@
 (depends-on "helm-projectile")
 (depends-on "helm-pydoc")
 (depends-on "highlight-parentheses")
-(depends-on "irony")
 (depends-on "magit")
 (depends-on "package-build")
 (depends-on "pallet")

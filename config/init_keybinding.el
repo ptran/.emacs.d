@@ -1,6 +1,6 @@
 ;;;; Prompt before closing emacs
-; credit: http://nileshk.com/2009/06/13/prompt-before-closing-emacs.html
-; ---------------------------------------------------------------------------
+;; credit: http://nileshk.com/2009/06/13/prompt-before-closing-emacs.html
+;; ---------------------------------------------------------------------------
 (defun ask-before-closing ()
   "Ask whether or not to close, and then close if y was pressed"
   (interactive)
@@ -15,27 +15,20 @@
 ;;;; Useful emacs commands
 ; ---------------------------------------------------------------------------
 (global-set-key (kbd "C-c s") 'eshell)
-(global-set-key (kbd "C-x C-g") 'goto-line)
-
-;;;; Company
-; ---------------------------------------------------------------------------
-; code completion keys
-(require 'cc-mode)
-(define-key c-mode-map (kbd "C-<tab>") 'company-complete)
-(define-key c++-mode-map (kbd "C-<tab>") 'company-complete)
+(global-set-key (kbd "C-x g") 'goto-line)
 
 ;;;; Helm
-; credit: tuhdo.github.io/helm-intro.html
-; ---------------------------------------------------------------------------
+;; credit: tuhdo.github.io/helm-intro.html
+;; ---------------------------------------------------------------------------
 ;; The default "C-x c" is close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)    ; rebind tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)      ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action)                 ; list actions using C-z
 
 (define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
 (define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
@@ -47,7 +40,7 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)  ; find-file
 (global-set-key (kbd "C-c h o") 'helm-occur)       ; occur (Finds expression in current buffer)
 
-; gtag key bindings
+;; gtags key bindings
 (require 'helm-gtags)
 (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
 (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-select)
@@ -55,3 +48,13 @@
 (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
 (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
 (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+;; company
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
+
+;;;; Hippie Expand
+;; ---------------------------------------------------------------------------
+(global-set-key (kbd "M-/") 'hippie-expand)

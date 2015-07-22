@@ -6,10 +6,10 @@
 ;; Stop the blinking cursor
 (blink-cursor-mode -1)
 
-;; Stop producing autosave(#) and backup(~) files
-(setq auto-save-default nil
-      make-backup-files nil)
-
+;; Keep autosave(#) and backup(~) files in specified folders
+(setq backup-directory-alist `((".*" . , backup-dir)))
+(setq auto-save-file-name-transforms `((".*" , auto-save-dir t)))
+    
 ;; Stop making sounds
 (setq ring-bell-function 'ignore)
 
@@ -45,6 +45,32 @@
 (semantic-mode 1)
 (global-semantic-stickyfunc-mode 1)
 
+;; Comment autofill
+(defun comment-auto-fill-only-comments ()
+  (auto-fill-mode 1)
+  (set (make-local-variable 'fill-nobreak-predicate)
+       (lambda () (not (eq (get-text-property (point) 'face) 'font-lock-comment-face)))))
+
+;; Prompt before closing emacs
+(defun ask-before-closing ()
+  "Ask whether or not to close, and then close if y was pressed"
+  (interactive)
+  (if (y-or-n-p (format "Are sure you want to exit Emacs? "))
+      (if (< emacs-major-version 22)
+	  (save-buffers-kill-terminal)
+	(save-buffers-kill-emacs))
+    (message "Canceled exit")))
+
+(global-set-key (kbd "C-x C-c") 'ask-before-closing)
+
+;; Nice-to-have keybindings
+(global-set-key (kbd "C-c s") 'eshell)
+(global-set-key (kbd "C-n") (lambda () (interactive) (next-line 5)))
+(global-set-key (kbd "C-p") (lambda () (interactive) (next-line -5)))
+
+;; ===========================================================================
+;;                              CMAKE MODE
+;; ===========================================================================
 ;; Add cmake to the mode list.
 (setq auto-mode-alist
       (append
@@ -55,13 +81,14 @@
 ;; Change this to where cmake-mode.el is in your system
 (autoload 'cmake-mode cmake-mode-dir t)
 
+;; ===========================================================================
+;;                          PACKAGE SPECIFICS
+;; ===========================================================================
 ;; Emacs themes
-(load-theme 'zenburn t)
+(load-theme 'hc-zenburn t)
 
 ;; Hippie-expand
 ;; ---------------------------------------------------------------------------
-;; credit: http://github.com/redgaurdtoo/emacs.d/blob/master/init-hippie-expand.el
-
 ;; let hippie-expand support ctags
 (defun tags-complete-tag (string predicate what)
   (save-excursion
@@ -83,7 +110,6 @@
 
 ;; Highlight parentheses
 ;; ---------------------------------------------------------------------------
-;; credit: http://www.emacswiki.org/emacs/HighlightParentheses
 (require 'highlight-parentheses)
 (require 'autopair)
 
@@ -99,7 +125,7 @@
 
 (global-highlight-parentheses-mode 1)
 
-;;;; Fill Column Indicator
+;; Fill Column Indicator
 ;; ---------------------------------------------------------------------------
 (require 'fill-column-indicator)
 
@@ -113,64 +139,52 @@
 (add-hook 'python-mode-hook     (lambda () (fci-mode 1) ))
 (add-hook 'text-mode-hook       (lambda () (fci-mode 1) ))
 
-;;;; Undo-tree
+;; Undo-tree
 ;; ---------------------------------------------------------------------------
 (require 'undo-tree)
-(global-undo-tree-mode t)
+(global-undo-tree-mode 1)
 
-;;;; Company 
-;; info: auto-completion system
+;; Company 
 ;; ---------------------------------------------------------------------------
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
-;; bigger popup window
-(setq company-tooltip-limit 20)
-;; decrease delay before autocompletion popup shows
-(setq company-idle-delay .3)
-;; increase duration before timeout
-(setq company-async-timeout 4)
-;; require three letters before popup
-(setq company-minimum-prefix-length 3)
-;; remove blinking
-(setq company-echo-delay 0)
-;; start autocompletion only after typing
-(setq company-begin-commands '(self-insert-command))
+(setq company-tooltip-limit 20
+      company-idle-delay nil)
+
 ;; any edits to company-clang-arguments are presumably safe if the input is a
 ;; list
 (put 'company-clang-arguments 'safe-local-variable #'listp)
 
-;;;; Helm
-;; info:   incremental completion and selection narrowing framework
-;; credit: tuhdo.github.io/helm-intro.html
+;; Helm
 ;; ---------------------------------------------------------------------------
+(add-to-list 'load-path (concat dot-d-dir "packages/helm"))
+
 (require 'helm)
 (require 'helm-config)
 (require 'helm-eshell)
 (require 'helm-files)
 (require 'helm-grep)
 
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
-
-(setq helm-quick-update                     t ; do not display invisible candidates
-      helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+(setq helm-quick-update                     t 
+      helm-buffers-fuzzy-matching           t 
+      helm-move-to-line-cycle-in-source     t 
+      helm-ff-search-library-in-sexp        t 
+      helm-scroll-amount                    8 
       helm-ff-file-name-history-use-recentf t)
 
 (helm-mode 1)
 
-;; For man pages
+;; man pages
 (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 
 ;; Setting up gtags
+(require 'helm-gtags)
+
 (setq helm-gtags-ignore-case t
-      helm-gtags-auto-update t
+      helm-gtags-auto-update nil
       helm-gtags-use-input-at-cursor t
       helm-gtags-pulse-at-cursor t
-      helm-gtags-prefix-key (kbd "C-c g")
       helm-gtags-suggested-key-mapping t)
 
 ;; Enable helm-gtags-mode
@@ -181,7 +195,38 @@
 (add-hook 'java-mode-hook 'helm-gtags-mode)
 (add-hook 'python-mode-hook 'helm-gtags-mode)
 
-;;;; Projectile
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) 
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+(define-key helm-map (kbd "C-z")  'helm-select-action)
+
+(define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+
+(global-set-key (kbd "M-x") 'helm-M-x)            
+(global-set-key (kbd "M-y") 'helm-show-kill-ring) 
+(global-set-key (kbd "C-x b") 'helm-mini)         
+(global-set-key (kbd "C-x C-f") 'helm-find-files) 
+(global-set-key (kbd "C-c h o") 'helm-occur)      
+
+;; gtags key bindings
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+;; company
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
+
+;; Projectile
 ;; ---------------------------------------------------------------------------
 (require 'projectile)
 (projectile-global-mode 1)
@@ -195,21 +240,16 @@
 ;; display  projects, and then files in a chosen project
 (setq helm-projectile-sources-list '(helm-source-projectile-projects
                                      helm-source-projectile-files-list))
-
 (setq projectile-switch-project-action 'helm-projectile)
 
-;;;; Popwin
+;; Popwin
 ;; ---------------------------------------------------------------------------
 (require 'popwin)
 (popwin-mode 1)
 
 ;; Get popwin to display pages for certain functions
-;; credit: https://gist.github.com/syl20bnr/5516054
-;; ---------------------------------------------------------------------------
 (setq display-buffer-function 'popwin:display-buffer)
 (push '("^\*helm .+\*$" :regexp t) popwin:special-display-config)
 (push '("^\*helm-.+\*$" :regexp t) popwin:special-display-config)
-
-;; magit display<
 (push '("^\*magit .+\*$" :regexp t) popwin:special-display-config)
 (push '("^\*magit-.+\*$" :regexp t) popwin:special-display-config)

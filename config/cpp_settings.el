@@ -11,12 +11,7 @@
 (add-hook 'c-mode-common-hook 'my-c-indent-hook)
 
 ;; Comments auto fill
-(defun my-c-auto-fill-hook ()
-  (auto-fill-mode 1)
-  (set (make-local-variable 'fill-nobreak-predicate)
-       (lambda () (not (eq (get-text-property (point) 'face) 'font-lock-comment-face)))))
-
-(add-hook 'c-mode-common-hook 'my-c-auto-fill-hook)
+(add-hook 'c-mode-common-hook 'comment-auto-fill-only-comments)
 
 ;; Open .h files in c++ mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))

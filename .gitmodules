@@ -1,0 +1,3 @@
+[submodule "packages/use-package"]
+	path = packages/use-package
+	url = /home/ptran/.emacs.d/packages/use-package

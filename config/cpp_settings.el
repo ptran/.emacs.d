@@ -10,14 +10,5 @@
   (c-set-offset 'inline-open '0))
 (add-hook 'c-mode-common-hook 'my-c-indent-hook)
 
-;; Comments auto fill
-(add-hook 'c-mode-common-hook 'comment-auto-fill-only-comments)
-
 ;; Open .h files in c++ mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
-;; this allows clang use instead of CEDET semantic tools
-(setq-default company-backends (delete 'company-semantic company-backends))
-
-;; include paths to clang argument
-(setq-default company-clang-arguments '("-I /usr/include"))

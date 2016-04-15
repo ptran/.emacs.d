@@ -11,15 +11,29 @@
 
 ;; Package management
 (require 'package)
-(package-initialize)
 (unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+
+(setq my-onlinep nil) ;; check for a network connection
+(unless (condition-case ;; [var eval handle-err]
+            nil (delete-process (make-network-process
+                                 :name "my-check-internet"
+                                 :host "elpa.gnu.org"
+                                 :service 80)) (error t))
+  (setq my-onlinep t))
+
+(when my-onlinep
   (package-refresh-contents))
+(package-initialize)
 
 (unless (package-installed-p 'use_package)
   (package-install 'use-package))
 (setq use-package-verbose t)
-(require 'use-package)
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 ;; Compile elisp
 (use-package auto-compile
@@ -38,8 +52,7 @@
 (add-to-list 'load-path (concat dot-d-dir "packages"))
 
 ;; If the operating system being used is Mac OS X, then meta == command
-(if (eq system-type 'darwin)
-    (progn
-      (require 'redo+)
-      (require 'mac-key-mode)
-      (setq mac-command-modifier 'meta)))
+(when (eq system-type 'darwin)
+  (require 'redo+)
+  (require 'mac-key-mode)
+  (setq mac-command-modifier 'meta))

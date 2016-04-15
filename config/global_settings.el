@@ -70,8 +70,8 @@
 ;; Nice-to-have keybindings
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
-(global-set-key (kbd "C-n") (lambda () (interactive) (forward-line 5)))
-(global-set-key (kbd "C-p") (lambda () (interactive) (forward-line -5)))
+(global-set-key (kbd "C-S-n") (lambda () (interactive) (forward-line 5)))
+(global-set-key (kbd "C-S-p") (lambda () (interactive) (forward-line -5)))
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
 
@@ -130,27 +130,25 @@
   (setq autopair-handle-action-fns
         (append (if autopair-handle-action-fns autopair-handle-action-fns '(autopair-default-handle-action))
                 '((lambda (action pair pos-before) (hl-paren-color-update))))))
-
 (add-hook 'highlight-parentheses-mode-hook 'autopair-add-on)
 
 (define-globalized-minor-mode global-highlight-parentheses-mode
   highlight-parentheses-mode (lambda () (highlight-parentheses-mode t)))
-
 (global-highlight-parentheses-mode 1)
 
 ;; Fill Column Indicator
 ;; ---------------------------------------------------------------------------
 (use-package fill-column-indicator
   :ensure t
-  :config
+  :init
   (setq-default fill-column 80)
   (setq-default fci-rule-color "gray")
   (setq-default fci-rule-width 5)
-  (add-hook 'c-mode-common-hook   (lambda () (fci-mode 1) ))
-  (add-hook 'emacs-lisp-mode-hook (lambda () (fci-mode 1) ))
-  (add-hook 'java-mode-hook       (lambda () (fci-mode 1) ))
-  (add-hook 'python-mode-hook     (lambda () (fci-mode 1) ))
-  (add-hook 'text-mode-hook       (lambda () (fci-mode 1) )))
+  (add-hook 'c-mode-common-hook   (lambda () (fci-mode 1)))
+  (add-hook 'emacs-lisp-mode-hook (lambda () (fci-mode 1)))
+  (add-hook 'java-mode-hook       (lambda () (fci-mode 1)))
+  (add-hook 'python-mode-hook     (lambda () (fci-mode 1)))
+  (add-hook 'text-mode-hook       (lambda () (fci-mode 1))))
 
 ;; Undo-tree
 ;; ---------------------------------------------------------------------------
@@ -170,14 +168,13 @@
   :ensure t
   :diminish helm-mode
   :init
-  (progn
-    (setq helm-candidate-number-limit 100)
-    (setq helm-idle-delay 0.0
+  (setq helm-candidate-number-limit 100
+          helm-idle-delay 0.0
           helm-input-idle-delay 0.01
           helm-buffers-fuzzy-matching t
           helm-quick-update t
           helm-ff-skip-boring-files t)
-    (helm-mode 1))
+  (helm-mode 1)
   :bind
   (("C-c h"   . helm-mini)
    ("C-x C-b" . helm-buffers-list)
@@ -186,6 +183,31 @@
    ("M-x"     . helm-M-x)
    ("C-x c o" . helm-occur)
    ("C-x c s" . helm-swoop)))
+
+(use-package helm-gtags
+  :ensure t
+  :defer t
+  :init
+  (setq helm-gtags-ignore-case t
+        helm-gtags-auto-update t
+        helm-gtags-use-input-at-cursor t
+        helm-gtags-pulse-at-cursor t
+        helm-gtags-prefix-key "C-c g"
+        helm-gtags-suggested-key-mapping t)
+  :bind
+  (("C-c g a" . helm-gtags-tags-in-this-function)
+   ("C-c g C-s" . helm-gtags-select)
+   ("M-." . helm-gtags-dwim)
+   ("M-," . helm-gtags-pop-stack)
+   ("C-c <" . helm-gtags-previous-history)
+   ("C-c >" . helm-gtags-next-history))
+  :config
+  (helm-gtags-mode 1)
+  (add-hook 'dired-mode-hook 'helm-gtags-mode)
+  (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+  (add-hook 'c-mode-hook 'helm-gtags-mode)
+  (add-hook 'c++-mode-hook 'helm-gtags-mode)
+  (add-hook 'java-mode-hook 'helm-gtags-mode))
 
 (use-package helm-swoop
  :ensure t
@@ -197,9 +219,8 @@
   ("C-c M-i" . helm-multi-swoop)
   ("C-x M-i" . helm-multi-swoop-all))
  :config
- (progn
-   (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-   (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)))
+ (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+ (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop))
 
 ;; Magit
 ;; ---------------------------------------------------------------------------
@@ -236,4 +257,21 @@
   :ensure t
   :diminish whitespace-mode
   :init
-  (add-hook 'prog-mode-hook 'whitespace-mode))
+  (add-hook 'prog-mode-hook 'whitespace-mode)
+  (setq whitespace-line-column 100))
+
+;; Company
+;; ---------------------------------------------------------------------------
+(use-package company
+  :ensure t
+  :defer t
+  :bind
+  ("C-<tab>" . company-complete)
+  :init
+  (setq company-minimum-prefix-length 2
+        company-tooltip-limit 10
+        company-idle-delay 0.5
+        company-echo-delay 0
+        company-show-numbers t)
+  :config
+  (global-company-mode 1))

@@ -1,14 +1,26 @@
 ;;;; Python emacs file
 
-; Indentation preference
-(add-hook 'python-mode-hook '(lambda () (setq python-indent 4)))
+(use-package python-mode
+  :init
+  (setq-default python-indent 4)
+  (when (executable-find "ipython")
+    (setq python-shell-interpreter "ipython"
+          python-shell-interpreter-args "")))
+(add-hook 'python-mode-hook 'run-python)
 
-; Fix potential encoding issues
-(setenv "LC_CTYPE" "UTF-8")
+;; Anaconda-mode
+;; ---------------------------------------------------------------------------
+(use-package anaconda-mode
+  :ensure t
+  :diminish anaconda-mode
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 
-;; Sets the python interpreter to be ipython. To trick emacs into
-;; thinking we're still running regular python, we run ipython in
-;; classic mode.
-(setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args "-i --classic")
+(use-package company-anaconda
+  :ensure t)
+
+(use-package company
+  :no-require t
+  :config
+  (add-to-list 'company-backends 'company-anaconda))

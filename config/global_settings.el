@@ -243,9 +243,7 @@
   :config
   (projectile-global-mode)
   (setq projectile-completion-system 'helm)
-  (if (eq system-type 'windows-nt)
-      (setq projectile-indexing-method 'alien)
-    (setq projectile-indexing-method 'native)))
+  (setq projectile-indexing-method 'alien))
 
 (use-package helm-projectile
   :ensure t

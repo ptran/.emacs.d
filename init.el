@@ -6,7 +6,7 @@
 (if (eq system-type 'gnu-linux)
     (defvar cmake-mode-el "/usr/share/cmake-2.8/editors/emacs/cmake-mode.el")
   (if (eq system-type 'darwin)
-      (defvar cmake-mode-el "")
+      (defvar cmake-mode-el "/usr/local/share/cmake/editors/emacs/cmake-mode.el")
     (defvar cmake-mode-el "")))
 
 ;; Check for network connectivity

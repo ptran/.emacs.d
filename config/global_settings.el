@@ -150,6 +150,15 @@
   (add-hook 'python-mode-hook     (lambda () (fci-mode 1)))
   (add-hook 'text-mode-hook       (lambda () (fci-mode 1))))
 
+;; Whitespace
+;; ---------------------------------------------------------------------------
+(use-package whitespace
+  :ensure t
+  :diminish whitespace-mode
+  :init
+  (add-hook 'prog-mode-hook 'whitespace-mode)
+  (setq whitespace-line-column 100))
+
 ;; Undo-tree
 ;; ---------------------------------------------------------------------------
 (use-package undo-tree
@@ -177,12 +186,16 @@
   (helm-mode 1)
   :bind
   (("C-c h"   . helm-mini)
+   ("C-x C-f" . helm-find-files)
    ("C-x C-b" . helm-buffers-list)
    ("C-x b"   . helm-buffers-list)
    ("M-y"     . helm-show-kill-ring)
    ("M-x"     . helm-M-x)
    ("C-x c o" . helm-occur)
-   ("C-x c s" . helm-swoop)))
+   ("C-x c s" . helm-swoop))
+  :config
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action))
 
 (use-package helm-gtags
   :ensure t
@@ -222,6 +235,25 @@
  (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
  (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop))
 
+;; Projectile
+;; ---------------------------------------------------------------------------
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :config
+  (projectile-global-mode)
+  (setq projectile-completion-system 'helm)
+  (if (eq system-type 'windows-nt)
+      (setq projectile-indexing-method 'alien)
+    (setq projectile-indexing-method 'native)))
+
+(use-package helm-projectile
+  :ensure t
+  :defer t
+  :config
+  (helm-projectile-on)
+  (setq projectile-switch-project-action 'helm-projectile-find-file))
+
 ;; Magit
 ;; ---------------------------------------------------------------------------
 (use-package magit
@@ -251,15 +283,6 @@
                                           (popwin-mode -1)))
   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1))))
 
-;; Whitespace
-;; ---------------------------------------------------------------------------
-(use-package whitespace
-  :ensure t
-  :diminish whitespace-mode
-  :init
-  (add-hook 'prog-mode-hook 'whitespace-mode)
-  (setq whitespace-line-column 100))
-
 ;; Company
 ;; ---------------------------------------------------------------------------
 (use-package company
@@ -275,3 +298,12 @@
         company-show-numbers t)
   :config
   (global-company-mode 1))
+
+;; Yasnippet
+;; ---------------------------------------------------------------------------
+(use-package yasnippet
+  :ensure t
+  :init
+  (setq yas-snippet-dirs (concat dot-d-dir "yasnippet-snippets"))
+  :config
+  (yas-global-mode 1))

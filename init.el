@@ -9,18 +9,19 @@
       (defvar cmake-mode-el "")
     (defvar cmake-mode-el "")))
 
-;; Package management
-(require 'package)
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
-
-(setq my-onlinep nil) ;; check for a network connection
+;; Check for network connectivity
+(setq my-onlinep nil)
 (unless (condition-case ;; [var eval handle-err]
             nil (delete-process (make-network-process
                                  :name "my-check-internet"
                                  :host "elpa.gnu.org"
                                  :service 80)) (error t))
   (setq my-onlinep t))
+
+;; Package management
+(require 'package)
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
 
 (when my-onlinep
   (package-refresh-contents))

@@ -58,16 +58,20 @@
   "Ask whether or not to close, and then close if y was pressed"
   (interactive)
   (if (y-or-n-p (format "Are sure you want to exit Emacs? "))
-      (if (< emacs-major-version 22)
-	  (save-buffers-kill-terminal)
-	(save-buffers-kill-emacs))
+      (save-buffers-kill-emacs)
     (message "Canceled exit")))
 (global-set-key (kbd "C-x C-c") 'ask-before-closing)
 
 ;; Autofill comments
 (setq comment-auto-fill-only-comments t)
 
+;; Parentheses handling
+(electric-pair-mode 1)
+(show-paren-mode 1)
+(setq show-paren-style 'mixed)
+
 ;; Nice-to-have keybindings
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (forward-line 5)))
@@ -80,8 +84,7 @@
 ;; ===========================================================================
 ;; Add cuda to the mode list.
 (setq auto-mode-alist
-      (append
-       '(("\\.cu\\'" . cuda-mode))
+      (append '(("\\.cu\\'" . cuda-mode))
        auto-mode-alist))
 
 (autoload 'cuda-mode (concat dot-d-dir "packages/cuda-mode.el"))
@@ -116,25 +119,14 @@
           try-expand-dabbrev-all-buffers
           try-expand-dabbrev-from-kill))
   :bind
-  ("M-/" . hippie-expand))
+  (("M-/" . hippie-expand)))
 
-;; Highlight parentheses
+;; Rainbow-block
 ;; ---------------------------------------------------------------------------
-(use-package highlight-parentheses
-  :ensure t)
-
-(use-package autopair
-  :ensure t)
-
-(defun autopair-add-on ()
-  (setq autopair-handle-action-fns
-        (append (if autopair-handle-action-fns autopair-handle-action-fns '(autopair-default-handle-action))
-                '((lambda (action pair pos-before) (hl-paren-color-update))))))
-(add-hook 'highlight-parentheses-mode-hook 'autopair-add-on)
-
-(define-globalized-minor-mode global-highlight-parentheses-mode
-  highlight-parentheses-mode (lambda () (highlight-parentheses-mode t)))
-(global-highlight-parentheses-mode 1)
+(use-package rainbow-blocks
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'rainbow-blocks-mode))
 
 ;; Fill Column Indicator
 ;; ---------------------------------------------------------------------------
@@ -144,11 +136,7 @@
   (setq-default fill-column 80)
   (setq-default fci-rule-color "gray")
   (setq-default fci-rule-width 5)
-  (add-hook 'c-mode-common-hook   (lambda () (fci-mode 1)))
-  (add-hook 'emacs-lisp-mode-hook (lambda () (fci-mode 1)))
-  (add-hook 'java-mode-hook       (lambda () (fci-mode 1)))
-  (add-hook 'python-mode-hook     (lambda () (fci-mode 1)))
-  (add-hook 'text-mode-hook       (lambda () (fci-mode 1))))
+  (add-hook 'prog-mode-hook 'fci-mode))
 
 ;; Whitespace
 ;; ---------------------------------------------------------------------------
@@ -156,7 +144,6 @@
   :ensure t
   :diminish whitespace-mode
   :init
-  (add-hook 'prog-mode-hook 'whitespace-mode)
   (setq whitespace-line-column 100))
 
 ;; Undo-tree
@@ -182,8 +169,8 @@
           helm-input-idle-delay 0.01
           helm-buffers-fuzzy-matching t
           helm-quick-update t
-          helm-ff-skip-boring-files t)
-  (helm-mode 1)
+          helm-ff-skip-boring-files t
+          helm-split-window-in-side-p t) ;; fixes popwin-like behavior
   :bind
   (("C-c h"   . helm-mini)
    ("C-x C-f" . helm-find-files)
@@ -192,14 +179,31 @@
    ("M-y"     . helm-show-kill-ring)
    ("M-x"     . helm-M-x)
    ("C-x c o" . helm-occur)
-   ("C-x c s" . helm-swoop))
+   :map helm-map
+   ("<tab>" . helm-execute-persistent-action)
+   ("C-i" . helm-execute-persistent-action))
   :config
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action))
+  (helm-mode 1))
+
+(use-package helm-swoop
+  :after helm
+  :ensure t
+  :init
+  (setq helm-swoop-split-window-function #'helm-default-display-buffer)
+  :bind
+  (("C-S-s" . helm-swoop)
+   ("M-i" . helm-swoop)
+   ("M-I" . helm-swoop-back-to-last-point)
+   ("C-c M-i" . helm-multi-swoop)
+   ("C-x M-i" . helm-multi-swoop-all)
+   :map isearch-mode-map
+   ("M-i" . helm-swoop-from-isearch)
+   :map helm-swoop-map
+   ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 
 (use-package helm-gtags
+  :after helm
   :ensure t
-  :defer t
   :init
   (setq helm-gtags-ignore-case t
         helm-gtags-auto-update t
@@ -216,24 +220,7 @@
    ("C-c >" . helm-gtags-next-history))
   :config
   (helm-gtags-mode 1)
-  (add-hook 'dired-mode-hook 'helm-gtags-mode)
-  (add-hook 'eshell-mode-hook 'helm-gtags-mode)
-  (add-hook 'c-mode-hook 'helm-gtags-mode)
-  (add-hook 'c++-mode-hook 'helm-gtags-mode)
-  (add-hook 'java-mode-hook 'helm-gtags-mode))
-
-(use-package helm-swoop
- :ensure t
- :defer t
- :bind
- (("C-S-s" . helm-swoop)
-  ("M-i" . helm-swoop)
-  ("M-I" . helm-swoop-back-to-last-point)
-  ("C-c M-i" . helm-multi-swoop)
-  ("C-x M-i" . helm-multi-swoop-all))
- :config
- (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
- (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop))
+  (add-hook 'prog-mode-hook 'helm-gtags-mode))
 
 ;; Projectile
 ;; ---------------------------------------------------------------------------
@@ -246,8 +233,8 @@
   (setq projectile-indexing-method 'alien))
 
 (use-package helm-projectile
+  :after helm projectile
   :ensure t
-  :defer t
   :config
   (helm-projectile-on)
   (setq projectile-switch-project-action 'helm-projectile-find-file))
@@ -261,31 +248,51 @@
 
 ;; Popwin
 ;; ---------------------------------------------------------------------------
+; tuhdo's helm display variables and functions (for spacemacs)
+(defvar helm-display-buffer-regexp `(,(rx bos "*" (* nonl) "helm" (* nonl) "*" eos)
+                                     (display-buffer-in-side-window)
+                                     (inhibit-same-window . t)
+                                     (window-height . 0.4)))
+(defvar tmp-display-buffer-alist nil)
+
 (use-package popwin
+  :after helm
   :ensure t
   :config
   (setq popwin:special-display-config
-        '(("*Help*" :height 0.4 :stick t)
-          ("*Occur*" :position bottom :height 0.3)
-          (magit-status-mode :position bottom :noselect t :height 0.3)
-          ("*magit-commit*" :position bottom :noselect t :height 0.3 :stick nil)
-          ("*magit-diff*" :position bottom :noselect t :height 0.3)
-          ("*magit-edit-log*" :position bottom :noselect t :height 0.2)
-          ("*magit-process*" :position bottom :noselect t :height 0.2)
-          ("*Compile-Log" :height 20 :stick t)
-          ("*Python*" :stick t)
-          ("*eshell*" :height 0.3)))
-  (push '("^\*helm.+\*$" :regexp t) popwin:special-display-config)
-  (add-hook 'helm-after-initialize-hook (lambda ()
-                                          (popwin:display-buffer helm-buffer t)
-                                          (popwin-mode -1)))
-  (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1))))
+        '(("*Help*"                                        :height 0.4 :stick t)
+          ("*Occur*"          :position bottom :height 0.3)
+          (magit-status-mode  :position bottom :noselect t :height 0.3)
+          ("*magit-commit*"   :position bottom :noselect t :height 0.3 :stick nil)
+          ("*magit-diff*"     :position bottom :noselect t :height 0.3)
+          ("*magit-edit-log*" :position bottom :noselect t :height 0.3)
+          ("*magit-process*"  :position bottom :noselect t :height 0.3)
+          ("*grep*"           :position bottom :noselect t             :stick t    :dedicated t)
+          ("*Compile-Log"                                  :height 0.4 :stick t)
+          ("*Python*"                                                  :stick t)
+          ("*eshell*"                                      :height 0.3)))
+  (popwin-mode 1)
+
+  ; tuhdo's helm display functions (for spacemacs) continued
+  (defun display-helm-at-bottom ()
+    (let ((display-buffer-base-action '(nil)))
+      (setq tmp-display-buffer-alist display-buffer-alist)
+      (setq display-buffer-alist (list helm-display-buffer-regexp))
+      (popwin-mode -1)))
+
+  (defun restore-previous-display-config ()
+    (popwin-mode 1)
+    (setq display-buffer-alist tmp-display-buffer-alist)
+    (setq tmp-display-buffer-alist nil))
+
+  (add-hook 'helm-after-initialize-hook 'display-helm-at-bottom)
+  (add-hook 'helm-cleanup-hook 'restore-previous-display-config))
 
 ;; Company
 ;; ---------------------------------------------------------------------------
 (use-package company
   :ensure t
-  :defer t
+  :diminish company-mode
   :bind
   ("C-<tab>" . company-complete)
   :init
@@ -301,6 +308,7 @@
 ;; ---------------------------------------------------------------------------
 (use-package yasnippet
   :ensure t
+  :diminish yasnippet-mode
   :init
   (setq yas-snippet-dirs (concat dot-d-dir "yasnippet-snippets"))
   :config

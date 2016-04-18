@@ -71,7 +71,9 @@
 (setq show-paren-style 'mixed)
 
 ;; Nice-to-have keybindings
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer-other-window)
+(add-hook 'ibuffer-mode-hook 'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:
+
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (forward-line 5)))
@@ -124,6 +126,7 @@
 ;; Rainbow-block
 ;; ---------------------------------------------------------------------------
 (use-package rainbow-blocks
+  :diminish rainbow-blocks-mode
   :ensure t
   :config
   (add-hook 'prog-mode-hook 'rainbow-blocks-mode))
@@ -174,7 +177,6 @@
   :bind
   (("C-c h"   . helm-mini)
    ("C-x C-f" . helm-find-files)
-   ("C-x C-b" . helm-buffers-list)
    ("C-x b"   . helm-buffers-list)
    ("M-y"     . helm-show-kill-ring)
    ("M-x"     . helm-M-x)
@@ -203,6 +205,7 @@
 
 (use-package helm-gtags
   :after helm
+  :diminish helm-gtags-mode
   :ensure t
   :init
   (setq helm-gtags-ignore-case t
@@ -263,15 +266,16 @@
   (setq popwin:special-display-config
         '(("*Help*"                                        :height 0.4 :stick t)
           ("*Occur*"          :position bottom :height 0.3)
-          (magit-status-mode  :position bottom :noselect t :height 0.3)
-          ("*magit-commit*"   :position bottom :noselect t :height 0.3 :stick nil)
-          ("*magit-diff*"     :position bottom :noselect t :height 0.3)
-          ("*magit-edit-log*" :position bottom :noselect t :height 0.3)
-          ("*magit-process*"  :position bottom :noselect t :height 0.3)
-          ("*grep*"           :position bottom :noselect t             :stick t    :dedicated t)
+          (magit-status-mode  :position bottom :noselect t :height 0.35)
+          ("*magit-commit*"   :position bottom :noselect t :height 0.35 :stick nil)
+          ("*magit-diff*"     :position bottom :noselect t :height 0.35)
+          ("*magit-edit-log*" :position bottom :noselect t :height 0.35)
+          ("*magit-process*"  :position bottom :noselect t :height 0.35)
+          ("*grep*"           :position bottom :noselect t :height 0.5 :stick t :dedicated t)
           ("*Compile-Log"                                  :height 0.4 :stick t)
-          ("*Python*"                                                  :stick t)
-          ("*eshell*"                                      :height 0.3)))
+          ("*Python*"                                      :height 0.4 :stick t)
+          ("*eshell*"                                      :height 0.4)
+          ("*Ibuffer*"                                     :height 0.4)))
   (popwin-mode 1)
 
   ; tuhdo's helm display functions (for spacemacs) continued

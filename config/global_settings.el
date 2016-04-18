@@ -225,6 +225,7 @@
 ;; Projectile
 ;; ---------------------------------------------------------------------------
 (use-package projectile
+  :after helm
   :ensure t
   :diminish projectile-mode
   :config
@@ -233,7 +234,7 @@
   (setq projectile-indexing-method 'alien))
 
 (use-package helm-projectile
-  :after helm projectile
+  :after projectile
   :ensure t
   :config
   (helm-projectile-on)

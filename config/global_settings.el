@@ -38,7 +38,7 @@
 (setq require-final-newline t)
 
 ;; Change buffer listing to ibuffer
-(defalias 'list-buffers 'ibuffer)
+(defalias 'list-buffers 'ibuffer-other-window)
 
 ;; No tab indents (use spaces instead)
 (setq-default indent-tabs-mode nil)
@@ -110,6 +110,20 @@
 (use-package hc-zenburn-theme
   :ensure t)
 
+;; Ibuffer-vc
+;; ---------------------------------------------------------------------------
+(use-package ibuffer-vc
+  :demand t
+  :ensure t
+  :config
+  (defun my-ibuffer-vc-hook ()
+    ;; ibuffer-vc-set-filter-groups-by-vc-root without buffer update for popwin
+    (setq ibuffer-filter-groups (ibuffer-vc-generate-filter-groups-by-vc-root))
+    (unless (eq ibuffer-sorting-mode 'alphabetic)
+      (ibuffer-do-sort-by-alphabetic)))
+
+  (add-hook 'ibuffer-hook 'my-ibuffer-vc-hook))
+
 ;; Hippie-expand
 ;; ---------------------------------------------------------------------------
 (use-package hippie-expand
@@ -163,7 +177,11 @@
 
 ;; Helm
 ;; ---------------------------------------------------------------------------
+(use-package helm-config
+  :demand t)
+
 (use-package helm
+  :after helm-config
   :ensure t
   :diminish helm-mode
   :init
@@ -260,7 +278,6 @@
 (defvar tmp-display-buffer-alist nil)
 
 (use-package popwin
-  :after helm
   :ensure t
   :config
   (setq popwin:special-display-config
@@ -276,7 +293,6 @@
           ("*Python*"                                      :height 0.4 :stick t)
           ("*eshell*"                                      :height 0.4)
           ("*Ibuffer*"                                     :height 0.4)))
-  (popwin-mode 1)
 
   ; tuhdo's helm display functions (for spacemacs) continued
   (defun display-helm-at-bottom ()
@@ -284,14 +300,14 @@
       (setq tmp-display-buffer-alist display-buffer-alist)
       (setq display-buffer-alist (list helm-display-buffer-regexp))
       (popwin-mode -1)))
-
   (defun restore-previous-display-config ()
     (popwin-mode 1)
     (setq display-buffer-alist tmp-display-buffer-alist)
     (setq tmp-display-buffer-alist nil))
 
   (add-hook 'helm-after-initialize-hook 'display-helm-at-bottom)
-  (add-hook 'helm-cleanup-hook 'restore-previous-display-config))
+  (add-hook 'helm-cleanup-hook 'restore-previous-display-config)
+  (popwin-mode 1))
 
 ;; Company
 ;; ---------------------------------------------------------------------------

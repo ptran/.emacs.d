@@ -1,6 +1,6 @@
 [submodule "packages/use-package"]
 	path = packages/use-package
-	url = /home/ptran/.emacs.d/packages/use-package
+	url = https://github.com/jwiegley/use-package
 [submodule "yasnippet-snippets"]
 	path = yasnippet-snippets
 	url = https://github.com/AndreaCrotti/yasnippet-snippets

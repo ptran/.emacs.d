@@ -4,8 +4,10 @@
 (defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
 
 ;; Load private settings (if available)
-(if (file-exists-p (concat dot-d-dir "config/private_settings.el"))
-    (load (concat dot-d-dir "config/private_settings.el")))
+(defconst private-file (concat dot-d-dir "config/private_settings.el"))
+(if (file-exists-p private-file)
+    (load private-file)
+  (defvar cmake-mode-el ""))
 
 ;; Check for network connectivity
 (setq my-online-p nil)

@@ -3,17 +3,12 @@
 (defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
 (defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
 
-(if (eq system-type 'gnu-linux)
-    (defconst cmake-mode-el "/usr/share/cmake-2.8/editors/emacs/cmake-mode.el"
-      "path to cmake-mode.el for linux")
-  (if (eq system-type 'darwin)
-      (defconst cmake-mode-el "/usr/local/share/cmake/editors/emacs/cmake-mode.el"
-        "path to cmake-mode.el for os x")
-    (defconst cmake-mode-el ""
-      "path to cmake-mode.el for windows")))
+;; Load private settings (if available)
+(if (file-exists-p (concat dot-d-dir "config/private_settings.el"))
+    (load (concat dot-d-dir "config/private_settings.el")))
 
 ;; Check for network connectivity
-(setq my-onlinep nil)
+(setq my-online-p nil)
 (unless (condition-case ;; [var eval handle-err]
             nil (delete-process (make-network-process
                                  :name "my-check-internet"

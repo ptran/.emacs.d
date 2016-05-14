@@ -38,7 +38,7 @@
 (setq require-final-newline t)
 
 ;; Change buffer listing to ibuffer
-(defalias 'list-buffers 'ibuffer-other-window)
+(defalias 'list-buffers 'ibuffer)
 
 ;; No tab indents (use spaces instead)
 (setq-default indent-tabs-mode nil)
@@ -71,7 +71,7 @@
 (setq show-paren-style 'mixed)
 
 ;; Nice-to-have keybindings
-(global-set-key (kbd "C-x C-b") 'ibuffer-other-window)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 (add-hook 'ibuffer-mode-hook 'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:
 
 (global-set-key (kbd "C-x g") 'goto-line)
@@ -107,7 +107,7 @@
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes
-(use-package hc-zenburn-theme
+(use-package atom-one-dark-theme
   :ensure t)
 
 ;; Ibuffer-vc
@@ -123,6 +123,22 @@
       (ibuffer-do-sort-by-alphabetic)))
 
   (add-hook 'ibuffer-hook 'my-ibuffer-vc-hook))
+
+;; Origami
+;; ---------------------------------------------------------------------------
+(use-package origami
+  :ensure t
+  :bind
+  (("C-c o u" . origami-open-node-recursively)
+   ("C-c o U" . origami-open-all-nodes)
+   ("C-c o f" . origami-close-node-recursively)
+   ("C-c o F" . origami-close-all-nodes)
+   ("C-c o T" . origami-toggle-all-nodes)
+   ("C-c o s" . origami-show-only-node)
+   ("C-c o C-_" . origami-undo)
+   ("C-c o M-_" . origami-redo))
+  :config
+  (global-origami-mode))
 
 ;; Hippie-expand
 ;; ---------------------------------------------------------------------------
@@ -141,9 +157,7 @@
 ;; ---------------------------------------------------------------------------
 (use-package rainbow-blocks
   :diminish rainbow-blocks-mode
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'rainbow-blocks-mode))
+  :ensure t)
 
 ;; Fill Column Indicator
 ;; ---------------------------------------------------------------------------
@@ -291,8 +305,7 @@
           ("*grep*"           :position bottom :noselect t :height 0.5 :stick t :dedicated t)
           ("*Compile-Log"                                  :height 0.4 :stick t)
           ("*Python*"                                      :height 0.4 :stick t)
-          ("*eshell*"                                      :height 0.4)
-          ("*Ibuffer*"                                     :height 0.4)))
+          ("*eshell*"                                      :height 0.4)))
 
   ; tuhdo's helm display functions (for spacemacs) continued
   (defun display-helm-at-bottom ()

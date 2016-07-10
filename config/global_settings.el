@@ -10,7 +10,7 @@
 (setq backup-directory-alist `((".*" . ,emacs-backup-dir)))
 
 ;; Set auto-save directory
-(setq auto-save-file-transforms `((".*" ,emacs-auto-save-dir t)))
+(setq auto-save-file-name-transforms `((".*" ,emacs-auto-save-dir t)))
 
 ;; Stop making sounds
 (setq ring-bell-function 'ignore)
@@ -68,7 +68,6 @@
 ;; Parentheses handling
 (electric-pair-mode 1)
 (show-paren-mode 1)
-(setq show-paren-style 'mixed)
 
 ;; Nice-to-have keybindings
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -107,6 +106,8 @@
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes
+(use-package hc-zenburn-theme
+  :ensure t)
 (use-package atom-one-dark-theme
   :ensure t)
 
@@ -152,12 +153,6 @@
           try-expand-dabbrev-from-kill))
   :bind
   (("M-/" . hippie-expand)))
-
-;; Rainbow-block
-;; ---------------------------------------------------------------------------
-(use-package rainbow-blocks
-  :diminish rainbow-blocks-mode
-  :ensure t)
 
 ;; Fill Column Indicator
 ;; ---------------------------------------------------------------------------
@@ -227,35 +222,13 @@
   :bind
   (("C-S-s" . helm-swoop)
    ("M-i" . helm-swoop)
-   ("M-I" . helm-swoop-back-to-last-point)
    ("C-c M-i" . helm-multi-swoop)
    ("C-x M-i" . helm-multi-swoop-all)
+   ("C-c M-p" . helm-multi-swoop-projectile)
    :map isearch-mode-map
    ("M-i" . helm-swoop-from-isearch)
    :map helm-swoop-map
    ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
-
-(use-package helm-gtags
-  :after helm
-  :diminish helm-gtags-mode
-  :ensure t
-  :init
-  (setq helm-gtags-ignore-case t
-        helm-gtags-auto-update t
-        helm-gtags-use-input-at-cursor t
-        helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "C-c g"
-        helm-gtags-suggested-key-mapping t)
-  :bind
-  (("C-c g a" . helm-gtags-tags-in-this-function)
-   ("C-c g C-s" . helm-gtags-select)
-   ("M-." . helm-gtags-dwim)
-   ("M-," . helm-gtags-pop-stack)
-   ("C-c <" . helm-gtags-previous-history)
-   ("C-c >" . helm-gtags-next-history))
-  :config
-  (helm-gtags-mode 1)
-  (add-hook 'prog-mode-hook 'helm-gtags-mode))
 
 ;; Projectile
 ;; ---------------------------------------------------------------------------
@@ -328,7 +301,7 @@
   :ensure t
   :diminish company-mode
   :bind
-  ("C-<tab>" . company-complete)
+  (("C-<tab>" . company-complete))
   :init
   (setq company-minimum-prefix-length 2
         company-tooltip-limit 10
@@ -343,7 +316,17 @@
 (use-package yasnippet
   :ensure t
   :diminish yasnippet-mode
+  :bind
+  (("C-c e" . yas-expand))
   :init
   (setq yas-snippet-dirs (concat dot-d-dir "yasnippet-snippets"))
   :config
   (yas-global-mode 1))
+
+;; Flycheck
+;; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(use-package flycheck
+  :ensure t
+  :diminish flycheck-mode
+  :config
+  (global-flycheck-mode 1))

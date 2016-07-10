@@ -1,4 +1,4 @@
-;;;; Python emacs file
+;;; Python emacs file
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
@@ -21,6 +21,9 @@
       (setq python-shell-interpreter "python"
             python-shell-interpreter-args ""))))
 
+;; Display line number
+(add-hook 'python-mode-hook (lambda () (linum-mode 1)))
+
 ;; Anaconda-mode
 ;; ---------------------------------------------------------------------------
 (use-package anaconda-mode
@@ -41,3 +44,9 @@
   :no-require t
   :config
   (add-to-list 'company-backends 'company-anaconda))
+
+;; ob-python
+;; ---------------------------------------------------------------------------
+(use-package ob-ipython
+  :after python
+  :ensure t)

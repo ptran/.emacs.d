@@ -4,19 +4,19 @@
 (defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
 
 ;; Load private settings (if available)
-(defconst private-file (concat dot-d-dir "config/private_settings.el"))
+(defvar private-file (concat dot-d-dir "config/private_settings.el"))
 (if (file-exists-p private-file)
     (load private-file)
   (defvar cmake-mode-el ""))
 
 ;; Check for network connectivity
-(setq my-online-p nil)
+(defvar my-online-p nil)
 (unless (condition-case ;; [var eval handle-err]
             nil (delete-process (make-network-process
                                  :name "my-check-internet"
                                  :host "elpa.gnu.org"
                                  :service 80)) (error t))
-  (setq my-onlinep t))
+  (setq my-online-p t))
 
 (if (version< emacs-version "24.3")
     (error "This configuration requires emacs 24.3 or higher")
@@ -26,7 +26,7 @@
     (unless (assoc-default "melpa" package-archives)
       (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/")))
 
-    (when my-onlinep
+    (when my-online-p
       (package-refresh-contents))
     (package-initialize)
 
@@ -52,7 +52,8 @@
     (load (concat dot-d-dir "config/global_settings.el"))
     (load (concat dot-d-dir "config/cpp_settings.el"))
     (load (concat dot-d-dir "config/lisp_settings.el"))
-    (load (concat dot-d-dir "config/python_settings.el"))))
+    (load (concat dot-d-dir "config/python_settings.el"))
+    (load (concat dot-d-dir "config/org_settings.el"))))
 
 ;; If the operating system being used is Mac OS X, then meta == command
 (use-package redo+

@@ -10,5 +10,8 @@
   (c-set-offset 'inline-open '0))
 (add-hook 'c-mode-common-hook 'my-c-indent-hook)
 
+;; Display line numbers
+(add-hook 'c-mode-common-hook (lambda () (linum-mode 1)))
+
 ;; Open .h files in c++ mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))

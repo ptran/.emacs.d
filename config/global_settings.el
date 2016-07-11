@@ -190,17 +190,18 @@
   :demand t)
 
 (use-package helm
+  :if (not (version< emacs-version "24.3"))
   :after helm-config
   :ensure t
   :diminish helm-mode
   :init
   (setq helm-candidate-number-limit 100
-          helm-idle-delay 0.0
-          helm-input-idle-delay 0.01
-          helm-buffers-fuzzy-matching t
-          helm-quick-update t
-          helm-ff-skip-boring-files t
-          helm-split-window-in-side-p t) ;; fixes popwin-like behavior
+        helm-idle-delay 0.0
+        helm-input-idle-delay 0.01
+        helm-buffers-fuzzy-matching t
+        helm-quick-update t
+        helm-ff-skip-boring-files t
+        helm-split-window-in-side-p t) ;; fixes popwin-like behavior
   :bind
   (("C-c h"   . helm-mini)
    ("C-x C-f" . helm-find-files)
@@ -230,6 +231,18 @@
    :map helm-swoop-map
    ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 
+(use-package flx-ido ; for versions less than 24.3
+  :if (not (featurep 'helm))
+  :ensure t
+  :config
+  (unless (featurep 'helm)  
+    (progn
+      (ido-mode 1)
+      (ido-everywhere 1)
+      (flx-ido-mode 1)))
+  (setq ido-enable-flex-matching t)
+  (setq ido-use-faces nil))
+
 ;; Projectile
 ;; ---------------------------------------------------------------------------
 (use-package projectile
@@ -238,7 +251,9 @@
   :diminish projectile-mode
   :config
   (projectile-global-mode)
-  (setq projectile-completion-system 'helm)
+  (if (featurep 'helm)
+      (setq projectile-completion-system 'helm)
+    (setq ))
   (setq projectile-indexing-method 'alien))
 
 (use-package helm-projectile
@@ -246,7 +261,7 @@
   :ensure t
   :config
   (helm-projectile-on)
-  (setq projectile-switch-project-action 'helm-projectile-find-file))
+  (setq projectile-switch-project-action 'helm-projectile-find-file))  
 
 ;; Magit
 ;; ---------------------------------------------------------------------------
@@ -324,9 +339,17 @@
   (yas-global-mode 1))
 
 ;; Flycheck
-;; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;; ---------------------------------------------------------------------------
 (use-package flycheck
   :ensure t
   :diminish flycheck-mode
   :config
   (global-flycheck-mode 1))
+
+;; Google-this
+;; ---------------------------------------------------------------------------
+(use-package google-this
+  :ensure t
+  :config
+  (google-this-mode 1)
+  (global-set-key (kbd "C-c g") 'google-this-mode-submap))

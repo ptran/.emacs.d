@@ -18,42 +18,40 @@
                                  :service 80)) (error t))
   (setq my-online-p t))
 
-(if (version< emacs-version "24.3")
-    (error "This configuration requires emacs 24.3 or higher")
-  (progn
-    ;; Package management
-    (require 'package)
-    (unless (assoc-default "melpa" package-archives)
-      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/")))
 
-    (when my-online-p
-      (package-refresh-contents))
-    (package-initialize)
+;; Package management
+(require 'package)
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/")))
 
-    ;; Setup use-package
-    (unless (package-installed-p 'use-package)
-      (package-install 'use-package))
-    (setq use-package-verbose t)
-    (eval-when-compile (require 'use-package))
-    (require 'diminish)
-    (require 'bind-key)
+(when my-online-p
+  (package-refresh-contents))
+(package-initialize)
 
-    ;; Compile elisp
-    (use-package auto-compile
-      :ensure t
-      :config
-      (auto-compile-on-load-mode))
-    (setq load-prefer-newer t)
+;; Add packages to the load
+(add-to-list 'load-path (concat dot-d-dir "packages"))
 
-    ;; Add packages to the load
-    (add-to-list 'load-path (concat dot-d-dir "packages"))
+;; Setup use-package
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(setq use-package-verbose t)
+(eval-when-compile (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
-    ;; Load configurations
-    (load (concat dot-d-dir "config/global_settings.el"))
-    (load (concat dot-d-dir "config/cpp_settings.el"))
-    (load (concat dot-d-dir "config/lisp_settings.el"))
-    (load (concat dot-d-dir "config/python_settings.el"))
-    (load (concat dot-d-dir "config/org_settings.el"))))
+;; Compile elisp
+(use-package auto-compile
+  :ensure t
+  :config
+  (auto-compile-on-load-mode))
+(setq load-prefer-newer t)
+
+;; Load configurations
+(load (concat dot-d-dir "config/global_settings.el"))
+(load (concat dot-d-dir "config/cpp_settings.el"))
+(load (concat dot-d-dir "config/lisp_settings.el"))
+(load (concat dot-d-dir "config/python_settings.el"))
+(load (concat dot-d-dir "config/org_settings.el"))
 
 ;; If the operating system being used is Mac OS X, then meta == command
 (use-package redo+

@@ -1,4 +1,10 @@
-.cask
 auto-save-list
-elpa/archives/gnu
+elpa
 eshell
+anaconda-mode
+session*
+recentf
+projectile*
+semanticdb
+snippets
+*.dat

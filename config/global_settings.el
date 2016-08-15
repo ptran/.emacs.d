@@ -111,6 +111,10 @@
 (use-package atom-one-dark-theme
   :ensure t)
 
+;; redo+
+;; ---------------------------------------------------------------------------
+(use-package redo+)
+
 ;; Ibuffer-vc
 ;; ---------------------------------------------------------------------------
 (use-package ibuffer-vc
@@ -342,9 +346,7 @@
 ;; ---------------------------------------------------------------------------
 (use-package flycheck
   :ensure t
-  :diminish flycheck-mode
-  :config
-  (global-flycheck-mode 1))
+  :diminish flycheck-mode)
 
 ;; Google-this
 ;; ---------------------------------------------------------------------------
@@ -353,3 +355,17 @@
   :config
   (google-this-mode 1)
   (global-set-key (kbd "C-c g") 'google-this-mode-submap))
+
+;; Markdown-Mode
+;; ---------------------------------------------------------------------------
+(use-package markdown-mode
+  :if (eq system-type 'gnu/linux)
+  :ensure t
+  :commands
+  (markdown-mode gfm-mode)
+  :mode
+  (("README\\.md\\'" . gfm-mode)
+   ("\\.md\\'" . markdown-mode)
+   ("\\.markdown\\'" . markdown-mode))
+  :init
+  (setq markdown-command "/usr/bin/pandoc"))

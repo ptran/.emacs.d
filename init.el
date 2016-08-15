@@ -54,9 +54,6 @@
 (load (concat dot-d-dir "config/org_settings.el"))
 
 ;; If the operating system being used is Mac OS X, then meta == command
-(use-package redo+
-  :if (eq system-type 'darwin))
-
 (use-package mac-key-mode
   :if (eq system-type 'darwin)
   :config

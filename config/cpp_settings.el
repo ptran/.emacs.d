@@ -1,4 +1,8 @@
-;;;; C++ emacs file
+;; cpp_settings.el
+;;
+;; Author:  Philip Tran
+;; URL:     https://github.com/ptran516/.emacs.d
+;; Version: 0.1
 
 ;; Indentation preferences
 (setq c-default-style "stroustrup"

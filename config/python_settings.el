@@ -1,28 +1,24 @@
-;;; Python emacs file
+;; python_settings.el
+;;
+;; Author:  Philip Tran
+;; URL:     https://github.com/ptran516/.emacs.d
+;; Version: 0.1
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :init
   (setq-default python-indent 4)
-  :config
-  (if (executable-find "ipython")
-      (setq python-shell-interpreter "ipython"
-            python-shell-interpreter-args ""
-            python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-            python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-            python-shell-completion-setup-code
-            "from IPython.core.completerlib import module_completion"
-            python-shell-completion-module-string-code
-            "';'.join(module_completion('''%s'''))\n"
-            python-shell-completion-string-code
-            "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-    ;; ipython else
-    (when (executable-find "python")
-      (setq python-shell-interpreter "python"
-            python-shell-interpreter-args ""))))
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "--simple-prompt -i"))
 
 ;; Display line number
 (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
+
+(use-package flycheck
+  :after python
+  :no-require t
+  :config 
+  (add-hook 'python-mode-hook 'flycheck-mode))
 
 ;; Anaconda-mode
 ;; ---------------------------------------------------------------------------
@@ -32,8 +28,7 @@
   :diminish anaconda-mode
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-  (add-hook 'python-mode-hook 'run-python))
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 
 (use-package company-anaconda
   :after anaconda-mode

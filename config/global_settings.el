@@ -1,3 +1,9 @@
+;; global_settings.el
+;;
+;; Author:  Philip Tran
+;; URL:     https://github.com/ptran516/.emacs.d
+;; Version: 0.1
+
 ;; Stop that noob shit at startup
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
@@ -20,6 +26,12 @@
 
 ;; Clipboard enabled
 (setq x-select-enable-clipboard t)
+
+;; Check if the font exists and set it
+(defvar my-font-type "Inconsolata-12:antialiasing=True:hinting=True")
+(defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
+(if (font-exists-p my-font-type)
+    (set-face-attribute 'default nil :font my-font-type))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)
@@ -100,20 +112,17 @@
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-(autoload 'cmake-mode cmake-mode-el t)
+(if (file-exists-p cmake-mode-el)
+    (autoload 'cmake-mode cmake-mode-el t))
 
 ;; ===========================================================================
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes
-(use-package hc-zenburn-theme
-  :ensure t)
-(use-package atom-one-dark-theme
-  :ensure t)
-
-;; redo+
-;; ---------------------------------------------------------------------------
-(use-package redo+)
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t))
 
 ;; Ibuffer-vc
 ;; ---------------------------------------------------------------------------
@@ -234,18 +243,6 @@
    ("M-i" . helm-swoop-from-isearch)
    :map helm-swoop-map
    ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
-
-(use-package flx-ido ; for versions less than 24.3
-  :if (not (featurep 'helm))
-  :ensure t
-  :config
-  (unless (featurep 'helm)  
-    (progn
-      (ido-mode 1)
-      (ido-everywhere 1)
-      (flx-ido-mode 1)))
-  (setq ido-enable-flex-matching t)
-  (setq ido-use-faces nil))
 
 ;; Projectile
 ;; ---------------------------------------------------------------------------

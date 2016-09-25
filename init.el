@@ -1,13 +1,35 @@
+;; init.el
+;;
+;; Author:  Philip Tran
+;; URL:     https://github.com/ptran516/.emacs.d
+;; Version: 0.1
+;;
+;;                     ░░░░░░░░░ 
+;;                     ░░░░▄▀▀▀▀▀█▀▄▄▄▄░░░░
+;;                     ░░▄▀▒▓▒▓▓▒▓▒▒▓▒▓▀▄░░
+;;                     ▄▀▒▒▓▒▓▒▒▓▒▓▒▓▓▒▒▓█░
+;;                     █▓▒▓▒▓▒▓▓▓░░░░░░▓▓█░
+;;                     █▓▓▓▓▓▒▓▒░░░░░░░░▓█░
+;;                     ▓▓▓▓▓▒░░░░░░░░░░░░█░
+;;                     ▓▓▓▓░░░░▄▄▄▄░░░▄█▄▀░
+;;                     ░▀▄▓░░▒▀▓▓▒▒░░█▓▒▒░░
+;;                     ▀▄░░░░░░░░░░░░▀▄▒▒█░
+;;                     ░▀░▀░░░░░▒▒▀▄▄▒▀▒▒█░
+;;                     ░░▀░░░░░░▒▄▄▒▄▄▄▒▒█░
+;;                     ░░░▀▄▄▒▒░░░░▀▀▒▒▄▀░░
+;;                     ░░░░░▀█▄▒▒░░░░▒▄▀░░░
+;;                     ░░░░░░░░▀▀█▄▄▄▄▀░░░
+
 ;; Define path variables for config
 (defconst dot-d-dir "~/.emacs.d/" ".emacs.d location")
 (defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
 (defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
+(defvar cmake-mode-el "/usr/local/share/cmake-3.5/editors/emacs/cmake-mode.el" "CMake el file")
 
 ;; Load private settings (if available)
 (defvar private-file (concat dot-d-dir "config/private_settings.el"))
 (if (file-exists-p private-file)
-    (load private-file)
-  (defvar cmake-mode-el ""))
+    (load private-file))
 
 ;; Check for network connectivity
 (defvar my-online-p nil)
@@ -17,7 +39,6 @@
                                  :host "elpa.gnu.org"
                                  :service 80)) (error t))
   (setq my-online-p t))
-
 
 ;; Package management
 (require 'package)
@@ -49,7 +70,7 @@
 ;; Load configurations
 (load (concat dot-d-dir "config/global_settings.el"))
 (load (concat dot-d-dir "config/cpp_settings.el"))
-(load (concat dot-d-dir "config/lisp_settings.el"))
+(load (concat dot-d-dir "config/java_settings.el"))
 (load (concat dot-d-dir "config/python_settings.el"))
 (load (concat dot-d-dir "config/org_settings.el"))
 

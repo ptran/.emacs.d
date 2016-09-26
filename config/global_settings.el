@@ -124,6 +124,16 @@
   :config
   (load-theme 'doom-one t))
 
+;; smart-mode-line
+;; ---------------------------------------------------------------------------
+(use-package smart-mode-line
+  :ensure t
+  :init
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'respectful)
+  :config
+  (sml/setup))
+
 ;; Ibuffer-vc
 ;; ---------------------------------------------------------------------------
 (use-package ibuffer-vc

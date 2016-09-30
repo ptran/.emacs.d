@@ -277,6 +277,7 @@
 ;; Magit
 ;; ---------------------------------------------------------------------------
 (use-package magit
+  :if (not (version< emacs-version "24.4"))
   :ensure t
   :bind
   (("C-c m" . magit-status)))
@@ -291,6 +292,7 @@
 (defvar tmp-display-buffer-alist nil)
 
 (use-package popwin
+  :if (not (version< emacs-version "22"))
   :ensure t
   :config
   (setq popwin:special-display-config
@@ -352,6 +354,7 @@
 ;; Flycheck
 ;; ---------------------------------------------------------------------------
 (use-package flycheck
+  :if (not (version< emacs-version "24.3"))
   :ensure t
   :diminish flycheck-mode)
 

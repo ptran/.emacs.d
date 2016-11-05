@@ -4,6 +4,14 @@
 ;; URL:     https://github.com/ptran516/.emacs.d
 ;; Version: 0.1
 
+;; ==================== ;;
+;;  Path Configuration  ;;
+;; ==================== ;;
+(defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
+(defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
+(defvar cmake-mode-el "/usr/local/share/cmake/editors/emacs/cmake-mode.el" "CMake el file")
+;;
+
 ;; Stop that noob shit at startup
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
@@ -30,8 +38,9 @@
 ;; Check if the font exists and set it
 (defvar my-font-type "Inconsolata-12:antialiasing=True:hinting=True")
 (defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
-(if (font-exists-p my-font-type)
-    (set-face-attribute 'default nil :font my-font-type))
+(if (window-system)
+    (if (font-exists-p my-font-type)
+        (set-face-attribute 'default nil :font my-font-type)))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)
@@ -209,13 +218,10 @@
 
 ;; Helm
 ;; ---------------------------------------------------------------------------
-(use-package helm-config
-  :demand t)
-
 (use-package helm
   :if (not (version< emacs-version "24.3"))
-  :after helm-config
   :ensure t
+  :demand t
   :diminish helm-mode
   :init
   (setq helm-candidate-number-limit 100
@@ -236,6 +242,7 @@
    ("<tab>" . helm-execute-persistent-action)
    ("C-i" . helm-execute-persistent-action))
   :config
+  (require 'helm-config)
   (helm-mode 1))
 
 (use-package helm-swoop
@@ -263,8 +270,7 @@
   :config
   (projectile-global-mode)
   (if (featurep 'helm)
-      (setq projectile-completion-system 'helm)
-    (setq ))
+      (setq projectile-completion-system 'helm))
   (setq projectile-indexing-method 'alien))
 
 (use-package helm-projectile

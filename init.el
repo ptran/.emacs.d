@@ -20,16 +20,12 @@
 ;;                     ░░░░░▀█▄▒▒░░░░▒▄▀░░░
 ;;                     ░░░░░░░░▀▀█▄▄▄▄▀░░░
 
-;; Define path variables for config
+;; Set emacs directory
 (defconst dot-d-dir "~/.emacs.d/" ".emacs.d location")
-(defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
-(defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
-(defvar cmake-mode-el "/usr/local/share/cmake-3.5/editors/emacs/cmake-mode.el" "CMake el file")
 
 ;; Load private settings (if available)
 (defvar private-file (concat dot-d-dir "config/private_settings.el"))
-(if (file-exists-p private-file)
-    (load private-file))
+(if (file-exists-p private-file) (load private-file))
 
 ;; Check for network connectivity
 (defvar my-online-p nil)
@@ -59,6 +55,7 @@
 (eval-when-compile (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
+(require 'cl)
 
 ;; Compile elisp
 (use-package auto-compile

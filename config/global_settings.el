@@ -2,14 +2,13 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1
+;; Version: 0.1.1
 
 ;; ==================== ;;
 ;;  Path Configuration  ;;
 ;; ==================== ;;
 (defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
 (defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
-(defvar cmake-mode-el "/usr/local/share/cmake/editors/emacs/cmake-mode.el" "CMake el file")
 ;;
 
 ;; Stop that noob shit at startup
@@ -36,7 +35,8 @@
 (setq x-select-enable-clipboard t)
 
 ;; Check if the font exists and set it
-(defvar my-font-type "Inconsolata-12:antialiasing=True:hinting=True")
+(defvar my-font-type "Source Code Pro-10:antialiasing=True:hinting=True")
+;; (defvar my-font-type "Inconsolata-12:antialiasing=True:hinting=True")
 (defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
 (if (window-system)
     (if (font-exists-p my-font-type)
@@ -106,7 +106,9 @@
 ;; ===========================================================================
 ;; Add cuda to the mode list.
 (setq auto-mode-alist
-      (append '(("\\.cu\\'" . cuda-mode))
+      (append
+       '(("\\.cu\\'" . cuda-mode))
+       '(("\\.cuh\\'" . cuda-mode))
        auto-mode-alist))
 
 (autoload 'cuda-mode (concat dot-d-dir "packages/cuda-mode.el"))
@@ -121,8 +123,7 @@
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-(if (file-exists-p cmake-mode-el)
-    (autoload 'cmake-mode cmake-mode-el t))
+(autoload 'cmake-mode (concat dot-d-dir "packages/cmake-mode.el"))
 
 ;; ===========================================================================
 ;;                          PACKAGE SPECIFICS
@@ -385,3 +386,15 @@
    ("\\.markdown\\'" . markdown-mode))
   :init
   (setq markdown-command "/usr/bin/pandoc"))
+
+;; flymd
+;; ---------------------------------------------------------------------------
+(use-package flymd
+  :after markdown-mode
+  :ensure t
+  :if (eq system-type 'gnu/linux)
+  :config
+  (defun my-flymd-browser-function (url)
+    (let ((browse-url-browser-function 'browse-url-firefox))
+      (browse-url url)))
+  (setq flymd-browser-open-function 'my-flymd-browser-function))

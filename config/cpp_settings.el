@@ -2,7 +2,7 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1
+;; Version: 0.1.1
 
 ;; Indentation preferences
 (setq c-default-style "stroustrup"
@@ -15,7 +15,7 @@
 (add-hook 'c-mode-common-hook 'my-c-indent-hook)
 
 ;; Display line numbers
-(add-hook 'c-mode-common-hook (lambda () (linum-mode 1)))
+(add-hook 'c-mode-common-hook (lambda () (linum-mode 1) (company-mode 0)))
 
 ;; Open .h files in c++ mode
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))

@@ -2,7 +2,7 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;;
 ;;                     ░░░░░░░░░ 
 ;;                     ░░░░▄▀▀▀▀▀█▀▄▄▄▄░░░░
@@ -64,15 +64,15 @@
   (auto-compile-on-load-mode))
 (setq load-prefer-newer t)
 
+;; If the operating system being used is Mac OS X, then meta == command
+(use-package mac-key-mode
+  :if (eq system-type 'darwin)
+  :config
+  (setq mac-command-modifier 'meta))
+
 ;; Load configurations
 (load (concat dot-d-dir "config/global_settings.el"))
 (load (concat dot-d-dir "config/cpp_settings.el"))
 (load (concat dot-d-dir "config/java_settings.el"))
 (load (concat dot-d-dir "config/python_settings.el"))
 (load (concat dot-d-dir "config/org_settings.el"))
-
-;; If the operating system being used is Mac OS X, then meta == command
-(use-package mac-key-mode
-  :if (eq system-type 'darwin)
-  :config
-  (setq mac-command-modifier 'meta))

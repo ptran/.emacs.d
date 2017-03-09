@@ -2,7 +2,7 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.1
+;; Version: 0.1.2
 
 ;; ==================== ;;
 ;;  Path Configuration  ;;
@@ -279,7 +279,7 @@
   :ensure t
   :config
   (helm-projectile-on)
-  (setq projectile-switch-project-action 'helm-projectile-find-file))  
+  (setq projectile-switch-project-action 'helm-projectile-find-file))
 
 ;; Magit
 ;; ---------------------------------------------------------------------------
@@ -303,17 +303,17 @@
   :ensure t
   :config
   (setq popwin:special-display-config
-        '(("*Help*"                                        :height 0.4 :stick t)
-          ("*Occur*"          :position bottom :height 0.3)
-          (magit-status-mode  :position bottom :noselect t :height 0.35)
-          ("*magit-commit*"   :position bottom :noselect t :height 0.35 :stick nil)
-          ("*magit-diff*"     :position bottom :noselect t :height 0.35)
-          ("*magit-edit-log*" :position bottom :noselect t :height 0.35)
-          ("*magit-process*"  :position bottom :noselect t :height 0.35)
-          ("*grep*"           :position bottom :noselect t :height 0.5 :stick t :dedicated t)
-          ("*Compile-Log"                                  :height 0.4 :stick t)
-          ("*Python*"                                      :height 0.4 :stick t)
-          ("*eshell*"                                      :height 0.4)))
+        '(("*Help*"            :height 0.4 :stick t)
+          ("*Occur*"           :position bottom :height 0.3)
+          (magit-status-mode   :position bottom :noselect t :height 0.35)
+          ("*magit-commit*"    :position bottom :noselect t :height 0.35 :stick nil)
+          ("*magit-diff*"      :position bottom :noselect t :height 0.35)
+          ("*magit-edit-log*"  :position bottom :noselect t :height 0.35)
+          ("*magit-process*"   :position bottom :noselect t :height 0.35)
+          ("*grep*"            :position bottom :noselect t :height 0.5 :stick t :dedicated t)
+          ("*Compile-Log"      :height 0.4 :stick t)
+          ("*Python*"          :height 0.4 :stick t)
+          ("*eshell*"          :height 0.4)))
 
   ; tuhdo's helm display functions (for spacemacs) continued
   (defun display-helm-at-bottom ()
@@ -336,15 +336,14 @@
   :ensure t
   :diminish company-mode
   :bind
+  ;; C-<tab> does not work in terminal
   (("C-<tab>" . company-complete))
   :init
   (setq company-minimum-prefix-length 2
         company-tooltip-limit 10
         company-idle-delay 0.5
         company-echo-delay 0
-        company-show-numbers t)
-  :config
-  (global-company-mode 1))
+        company-show-numbers t))
 
 ;; Yasnippet
 ;; ---------------------------------------------------------------------------

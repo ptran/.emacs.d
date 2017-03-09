@@ -2,14 +2,16 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.1
+;; Version: 0.1.2
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :init
   (setq-default python-indent 4)
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "--simple-prompt -i"))
+  (if (executable-find "ipython")
+      (setq python-shell-interpreter "ipython")
+    (setq python-shell-interpreter "python"))
+  (setq python-shell-interpreter-args "--simple-prompt -i"))
 
 ;; Display line number
 (add-hook 'python-mode-hook (lambda () (linum-mode 1)))

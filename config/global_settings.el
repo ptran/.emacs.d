@@ -4,11 +4,12 @@
 ;; URL:     https://github.com/ptran516/.emacs.d
 ;; Version: 0.1.2
 
-;; ==================== ;;
-;;  Path Configuration  ;;
-;; ==================== ;;
+;; =============== ;;
+;;  Configuration  ;;
+;; =============== ;;
 (defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
 (defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
+(defconst my/markdown-command "/usr/bin/pandoc" "program used for markdown generation")
 ;;
 
 ;; Stop that noob shit at startup
@@ -35,12 +36,12 @@
 (setq x-select-enable-clipboard t)
 
 ;; Check if the font exists and set it
-(defvar my-font-type "Source Code Pro-10:antialiasing=True:hinting=True")
-;; (defvar my-font-type "Inconsolata-12:antialiasing=True:hinting=True")
+(defvar my/font-type "Source Code Pro-10:antialiasing=True:hinting=True")
+;; (defvar my/font-type "Inconsolata-12:antialiasing=True:hinting=True")
 (defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
 (if (window-system)
-    (if (font-exists-p my-font-type)
-        (set-face-attribute 'default nil :font my-font-type)))
+    (if (font-exists-p my/font-type)
+        (set-face-attribute 'default nil :font my/font-type)))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)
@@ -63,10 +64,6 @@
 
 ;; No tab indents (use spaces instead)
 (setq-default indent-tabs-mode nil)
-
-;; Display function name on the first line
-(semantic-mode 1)
-(global-semantic-stickyfunc-mode 1)
 
 ;; Comment autofill
 (defun comment-auto-fill-only-comments ()
@@ -92,7 +89,7 @@
 
 ;; Nice-to-have keybindings
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(add-hook 'ibuffer-mode-hook 'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:
+(add-hook 'ibuffer-mode-hook #'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:
 
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
@@ -100,6 +97,17 @@
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (forward-line -5)))
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
+
+;; Indentation for org source code blocks
+(setq org-src-tab-acts-natively t)
+
+;; Switching through windows
+(use-package windmove
+  :bind
+  (("C-c w a" . windmove-left)
+   ("C-c w w" . windmove-up)
+   ("C-c w d" . windmove-right)
+   ("C-c w s" . windmove-down)))
 
 ;; ===========================================================================
 ;;                              CUDA MODE
@@ -150,13 +158,13 @@
   :demand t
   :ensure t
   :config
-  (defun my-ibuffer-vc-hook ()
+  (defun my/ibuffer-vc-hook ()
     ;; ibuffer-vc-set-filter-groups-by-vc-root without buffer update for popwin
     (setq ibuffer-filter-groups (ibuffer-vc-generate-filter-groups-by-vc-root))
     (unless (eq ibuffer-sorting-mode 'alphabetic)
       (ibuffer-do-sort-by-alphabetic)))
 
-  (add-hook 'ibuffer-hook 'my-ibuffer-vc-hook))
+  (add-hook 'ibuffer-hook #'my/ibuffer-vc-hook))
 
 ;; Origami
 ;; ---------------------------------------------------------------------------
@@ -195,7 +203,7 @@
   (setq-default fill-column 80)
   (setq-default fci-rule-color "gray")
   (setq-default fci-rule-width 5)
-  (add-hook 'prog-mode-hook 'fci-mode))
+  (add-hook 'prog-mode-hook #'fci-mode))
 
 ;; Whitespace
 ;; ---------------------------------------------------------------------------
@@ -209,13 +217,16 @@
 ;; ---------------------------------------------------------------------------
 (use-package undo-tree
   :ensure t
+  :demand t
   :bind
   (("C-_" . undo)
-   ("M-_" . redo))
+   ("M-_" . redo)
+   ("C-x u" . undo-tree-visualize))
   :diminish undo-tree-mode
   :config
   (global-undo-tree-mode 1)
-  (setq undo-tree-visualizer-timestamps t))
+  (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-diff t))
 
 ;; Helm
 ;; ---------------------------------------------------------------------------
@@ -248,6 +259,7 @@
 
 (use-package helm-swoop
   :after helm
+  :no-require t
   :ensure t
   :init
   (setq helm-swoop-split-window-function #'helm-default-display-buffer)
@@ -261,6 +273,13 @@
    ("M-i" . helm-swoop-from-isearch)
    :map helm-swoop-map
    ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
+
+(use-package helm-descbinds
+  :after helm
+  :no-require t
+  :ensure t
+  :bind (("C-h b" . helm-descbinds)
+         ("C-h w" . helm-descbinds)))
 
 ;; Projectile
 ;; ---------------------------------------------------------------------------
@@ -312,7 +331,6 @@
           ("*magit-process*"   :position bottom :noselect t :height 0.35)
           ("*grep*"            :position bottom :noselect t :height 0.5 :stick t :dedicated t)
           ("*Compile-Log"      :height 0.4 :stick t)
-          ("*Python*"          :height 0.4 :stick t)
           ("*eshell*"          :height 0.4)))
 
   ; tuhdo's helm display functions (for spacemacs) continued
@@ -326,8 +344,8 @@
     (setq display-buffer-alist tmp-display-buffer-alist)
     (setq tmp-display-buffer-alist nil))
 
-  (add-hook 'helm-after-initialize-hook 'display-helm-at-bottom)
-  (add-hook 'helm-cleanup-hook 'restore-previous-display-config)
+  (add-hook 'helm-after-initialize-hook #'display-helm-at-bottom)
+  (add-hook 'helm-cleanup-hook #'restore-previous-display-config)
   (popwin-mode 1))
 
 ;; Company
@@ -335,15 +353,18 @@
 (use-package company
   :ensure t
   :diminish company-mode
-  :bind
-  ;; C-<tab> does not work in terminal
-  (("C-<tab>" . company-complete))
   :init
   (setq company-minimum-prefix-length 2
         company-tooltip-limit 10
         company-idle-delay 0.5
         company-echo-delay 0
-        company-show-numbers t))
+        company-show-numbers t)
+  (if (window-system)
+      (bind-key "C-<tab>" 'company-complete)
+    ; C-<tab> does not work in terminal mode
+    (bind-key "C-c c" 'company-complete))
+  :config
+  (global-company-mode 1))
 
 ;; Yasnippet
 ;; ---------------------------------------------------------------------------
@@ -351,7 +372,7 @@
   :ensure t
   :diminish yasnippet-mode
   :bind
-  (("C-c e" . yas-expand))
+  (("C-c y" . yas-expand))
   :init
   (setq yas-snippet-dirs (concat dot-d-dir "yasnippet-snippets"))
   :config
@@ -384,7 +405,7 @@
    ("\\.md\\'" . markdown-mode)
    ("\\.markdown\\'" . markdown-mode))
   :init
-  (setq markdown-command "/usr/bin/pandoc"))
+  (setq markdown-command my/markdown-command))
 
 ;; flymd
 ;; ---------------------------------------------------------------------------
@@ -393,7 +414,7 @@
   :ensure t
   :if (eq system-type 'gnu/linux)
   :config
-  (defun my-flymd-browser-function (url)
+  (defun my/flymd-browser-function (url)
     (let ((browse-url-browser-function 'browse-url-firefox))
       (browse-url url)))
-  (setq flymd-browser-open-function 'my-flymd-browser-function))
+  (setq flymd-browser-open-function 'my/flymd-browser-function))

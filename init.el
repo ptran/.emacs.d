@@ -27,6 +27,11 @@
 (defvar private-file (concat dot-d-dir "config/private_settings.el"))
 (if (file-exists-p private-file) (load private-file))
 
+;; Package management
+(require 'package)
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/")))
+
 ;; Check for network connectivity
 (defvar my-online-p nil)
 (unless (condition-case ;; [var eval handle-err]
@@ -35,11 +40,6 @@
                                  :host "elpa.gnu.org"
                                  :service 80)) (error t))
   (setq my-online-p t))
-
-;; Package management
-(require 'package)
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/")))
 
 (when my-online-p
   (package-refresh-contents))

@@ -19,4 +19,5 @@
 (use-package company-emacs-eclim
   :ensure t
   :config
-  (company-emacs-eclim-setup))
+  (company-emacs-eclim-setup)
+  (add-hook 'java-mode-hook 'company-mode))

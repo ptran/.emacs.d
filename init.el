@@ -76,3 +76,4 @@
 (load (concat dot-d-dir "config/java_settings.el"))
 (load (concat dot-d-dir "config/python_settings.el"))
 (load (concat dot-d-dir "config/org_settings.el"))
+(load (concat dot-d-dir "config/latex_settings.el"))

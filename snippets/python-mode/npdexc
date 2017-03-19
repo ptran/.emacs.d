@@ -1,0 +1,7 @@
+# key: npdexc
+# name: numpydoc raises header
+# --
+Raises
+------
+${1:Exception}
+    $0

@@ -10,7 +10,6 @@ recentf
 projectile*
 semanticdb
 session*
-snippets
 *.dat
 
 private_settings.el

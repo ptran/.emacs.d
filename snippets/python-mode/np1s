@@ -1,0 +1,4 @@
+# key: np1s
+# name: numpy ones
+# --
+np.ones({$1:[]}, dtype={$2:'float32'})

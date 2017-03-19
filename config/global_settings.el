@@ -1,4 +1,4 @@
-;; global_settings.el
+ ;; global_settings.el
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
@@ -374,7 +374,7 @@
   :bind
   (("C-c y" . yas-expand))
   :init
-  (setq yas-snippet-dirs (concat dot-d-dir "yasnippet-snippets"))
+  (setq yas-snippet-dirs (concat dot-d-dir "snippets"))
   :config
   (yas-global-mode 1))
 

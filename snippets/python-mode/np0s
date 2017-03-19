@@ -1,0 +1,4 @@
+# key: np0s
+# name: numpy zeros
+# --
+np.zeros({$1:[]}, dtype={$2:'float32'})

@@ -1,0 +1,9 @@
+# key: hgd
+# name: header guard
+# --
+#ifdef ${1:FOOBAR_H_}
+#define $1
+
+$0
+
+#endif $1

@@ -1,0 +1,7 @@
+# key: npdret
+# name: numpydoc returns block
+# --
+Returns
+-------
+${1:type}
+    $0

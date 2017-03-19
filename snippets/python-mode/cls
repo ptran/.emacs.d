@@ -1,0 +1,9 @@
+# key: cls
+# name: python class definition
+# --
+class ${1:foo}(${2:object}):
+    """ ${3:Class docstring}. """
+
+    def __init__(self):
+        """ Initialize ${4:foo} instance. """
+        $0

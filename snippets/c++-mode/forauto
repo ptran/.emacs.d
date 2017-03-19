@@ -1,0 +1,6 @@
+# key: forauto
+# name: for auto iterator increment loop
+# --
+for (${1:auto }${2:it} = ${3:vec}.begin(); $2 < $3.end(); ++$2) {
+    $0
+}

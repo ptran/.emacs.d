@@ -72,6 +72,7 @@
 
 ;; Load configurations
 (load (concat dot-d-dir "config/global_settings.el"))
+(load (concat dot-d-dir "config/elisp_settings.el"))
 (load (concat dot-d-dir "config/cpp_settings.el"))
 (load (concat dot-d-dir "config/java_settings.el"))
 (load (concat dot-d-dir "config/python_settings.el"))

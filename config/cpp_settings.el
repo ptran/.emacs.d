@@ -2,7 +2,7 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.2
+;; Version: 0.1.3
 
 ;; Indentation preferences
 (setq c-default-style "stroustrup"
@@ -30,7 +30,8 @@
   :if (and (executable-find "clang") (executable-find "cmake") (not (version< emacs-version "24.4")))
   :ensure t
   :config
-  (add-hook 'c-mode-common-hook #'irony-mode)
+  (add-hook 'c-mode-hook #'irony-mode)
+  (add-hook 'c++-mode-hook #'irony-mode)
   (add-hook 'irony-mode-hook #'my/irony-mode-hook)
   (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options))
 

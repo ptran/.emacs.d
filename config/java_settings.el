@@ -2,7 +2,7 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.1
+;; Version: 0.1.3
 
 ;; eclim
 ;; ---------------------------------------------------------------------------

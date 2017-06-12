@@ -2,7 +2,7 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.2
+;; Version: 0.1.3
 
 ;; =============== ;;
 ;;  Configuration  ;;
@@ -118,7 +118,6 @@
        '(("\\.cu\\'" . cuda-mode))
        '(("\\.cuh\\'" . cuda-mode))
        auto-mode-alist))
-
 (autoload 'cuda-mode (concat dot-d-dir "packages/cuda-mode.el"))
 
 ;; ===========================================================================
@@ -130,7 +129,6 @@
        '(("CMakeLists\\.txt\\'" . cmake-mode))
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
-
 (autoload 'cmake-mode (concat dot-d-dir "packages/cmake-mode.el"))
 
 ;; ===========================================================================
@@ -163,24 +161,7 @@
     (setq ibuffer-filter-groups (ibuffer-vc-generate-filter-groups-by-vc-root))
     (unless (eq ibuffer-sorting-mode 'alphabetic)
       (ibuffer-do-sort-by-alphabetic)))
-
   (add-hook 'ibuffer-hook #'my/ibuffer-vc-hook))
-
-;; Origami
-;; ---------------------------------------------------------------------------
-(use-package origami
-  :ensure t
-  :bind
-  (("C-c o u" . origami-open-node-recursively)
-   ("C-c o U" . origami-open-all-nodes)
-   ("C-c o f" . origami-close-node-recursively)
-   ("C-c o F" . origami-close-all-nodes)
-   ("C-c o T" . origami-toggle-all-nodes)
-   ("C-c o s" . origami-show-only-node)
-   ("C-c o C-_" . origami-undo)
-   ("C-c o M-_" . origami-redo))
-  :config
-  (global-origami-mode))
 
 ;; Hippie-expand
 ;; ---------------------------------------------------------------------------
@@ -200,7 +181,7 @@
 (use-package fill-column-indicator
   :ensure t
   :init
-  (setq-default fill-column 80)
+  (setq-default fill-column 120)
   (setq-default fci-rule-color "gray")
   (setq-default fci-rule-width 5)
   (add-hook 'prog-mode-hook #'fci-mode))
@@ -211,7 +192,7 @@
   :ensure t
   :diminish whitespace-mode
   :init
-  (setq whitespace-line-column 100))
+  (setq whitespace-line-column 120))
 
 ;; Undo-tree
 ;; ---------------------------------------------------------------------------
@@ -224,81 +205,50 @@
    ("C-x u" . undo-tree-visualize))
   :diminish undo-tree-mode
   :config
-  (global-undo-tree-mode 1)
-  (setq undo-tree-visualizer-timestamps t)
-  (setq undo-tree-visualizer-diff t))
+  (global-undo-tree-mode 1))
 
-;; Helm
+;; Ivy
 ;; ---------------------------------------------------------------------------
-(use-package helm
-  :if (not (version< emacs-version "24.3"))
+(use-package ivy
   :ensure t
   :demand t
-  :diminish helm-mode
+  :diminish ivy-mode
   :init
-  (setq helm-candidate-number-limit 100
-        helm-idle-delay 0.0
-        helm-input-idle-delay 0.01
-        helm-buffers-fuzzy-matching t
-        helm-quick-update t
-        helm-ff-skip-boring-files t
-        helm-split-window-in-side-p t) ;; fixes popwin-like behavior
+  (setq ivy-height 15)
+  (setq ivy-count-format "[%d/%d] ")
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
   :bind
-  (("C-c h"   . helm-mini)
-   ("C-x C-f" . helm-find-files)
-   ("C-x b"   . helm-buffers-list)
-   ("M-y"     . helm-show-kill-ring)
-   ("M-x"     . helm-M-x)
-   ("C-x c o" . helm-occur)
-   :map helm-map
-   ("<tab>" . helm-execute-persistent-action)
-   ("C-i" . helm-execute-persistent-action))
+  (("C-s" . swiper)
+   ("C-r" . swiper)
+   ("C-c C-r" . ivy-resume)
+   ("M-x" . counsel-M-x)
+   ("M-y" . counsel-yank-pop)
+   ("C-x C-f" . counsel-find-file))
   :config
-  (require 'helm-config)
-  (helm-mode 1))
+  (ivy-mode 1))
 
-(use-package helm-swoop
-  :after helm
-  :no-require t
-  :ensure t
-  :init
-  (setq helm-swoop-split-window-function #'helm-default-display-buffer)
-  :bind
-  (("C-S-s" . helm-swoop)
-   ("M-i" . helm-swoop)
-   ("C-c M-i" . helm-multi-swoop)
-   ("C-x M-i" . helm-multi-swoop-all)
-   ("C-c M-p" . helm-multi-swoop-projectile)
-   :map isearch-mode-map
-   ("M-i" . helm-swoop-from-isearch)
-   :map helm-swoop-map
-   ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
-
-(use-package helm-descbinds
-  :after helm
-  :no-require t
-  :ensure t
-  :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+;; Mainly for ivy-wgrep-change-to-wgrep-mode
+(use-package wgrep
+  :ensure t)
 
 ;; Projectile
 ;; ---------------------------------------------------------------------------
 (use-package projectile
-  :after helm
+  :after ivy
   :ensure t
   :diminish projectile-mode
   :config
   (projectile-global-mode)
-  (if (featurep 'helm)
-      (setq projectile-completion-system 'helm))
+  (if (featurep 'ivy)
+      (setq projectile-completion-system 'ivy))
   (setq projectile-indexing-method 'alien))
 
-(use-package helm-projectile
+(use-package counsel-projectile
   :after projectile
   :ensure t
   :config
-  (helm-projectile-on)
-  (setq projectile-switch-project-action 'helm-projectile-find-file))
+  (counsel-projectile-on))
 
 ;; Magit
 ;; ---------------------------------------------------------------------------
@@ -307,46 +257,6 @@
   :ensure t
   :bind
   (("C-c m" . magit-status)))
-
-;; Popwin
-;; ---------------------------------------------------------------------------
-; tuhdo's helm display variables and functions (for spacemacs)
-(defvar helm-display-buffer-regexp `(,(rx bos "*" (* nonl) "helm" (* nonl) "*" eos)
-                                     (display-buffer-in-side-window)
-                                     (inhibit-same-window . t)
-                                     (window-height . 0.4)))
-(defvar tmp-display-buffer-alist nil)
-
-(use-package popwin
-  :if (not (version< emacs-version "22"))
-  :ensure t
-  :config
-  (setq popwin:special-display-config
-        '(("*Help*"            :height 0.4 :stick t)
-          ("*Occur*"           :position bottom :height 0.3)
-          (magit-status-mode   :position bottom :noselect t :height 0.35)
-          ("*magit-commit*"    :position bottom :noselect t :height 0.35 :stick nil)
-          ("*magit-diff*"      :position bottom :noselect t :height 0.35)
-          ("*magit-edit-log*"  :position bottom :noselect t :height 0.35)
-          ("*magit-process*"   :position bottom :noselect t :height 0.35)
-          ("*grep*"            :position bottom :noselect t :height 0.5 :stick t :dedicated t)
-          ("*Compile-Log"      :height 0.4 :stick t)
-          ("*eshell*"          :height 0.4)))
-
-  ; tuhdo's helm display functions (for spacemacs) continued
-  (defun display-helm-at-bottom ()
-    (let ((display-buffer-base-action '(nil)))
-      (setq tmp-display-buffer-alist display-buffer-alist)
-      (setq display-buffer-alist (list helm-display-buffer-regexp))
-      (popwin-mode -1)))
-  (defun restore-previous-display-config ()
-    (popwin-mode 1)
-    (setq display-buffer-alist tmp-display-buffer-alist)
-    (setq tmp-display-buffer-alist nil))
-
-  (add-hook 'helm-after-initialize-hook #'display-helm-at-bottom)
-  (add-hook 'helm-cleanup-hook #'restore-previous-display-config)
-  (popwin-mode 1))
 
 ;; Company
 ;; ---------------------------------------------------------------------------
@@ -384,14 +294,6 @@
   :if (not (version< emacs-version "24.3"))
   :ensure t
   :diminish flycheck-mode)
-
-;; Google-this
-;; ---------------------------------------------------------------------------
-(use-package google-this
-  :ensure t
-  :config
-  (google-this-mode 1)
-  (global-set-key (kbd "C-c g") 'google-this-mode-submap))
 
 ;; Markdown-Mode
 ;; ---------------------------------------------------------------------------

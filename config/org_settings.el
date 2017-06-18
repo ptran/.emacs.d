@@ -4,6 +4,13 @@
 ;; URL:     https://github.com/ptran516/.emacs.d
 ;; Version: 0.1.3
 
+;; =============== ;;
+;;  Configuration  ;;
+;; =============== ;;
+(defconst my/org-task-file "~/Dropbox/Documents/Org/todo.org")
+(defconst my/org-notes-file "~/Dropbox/Documents/Org/notes.org")
+;;
+
 ;; Templates defined in private_settings.el
 (use-package org
   :bind
@@ -11,20 +18,16 @@
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture))
   :config
+  (setq org-agenda-files '("~/Dropbox/Documents/Org"))
+  (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
   (setq org-log-done t)
-  (add-hook 'org-mode-hook #'org-indent-mode))
-
-;; Set TODO keywords
-(setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "RECOMMENDATION" "|" "DONE" "CANCELED")))
-
-;; No prompt for execution
-(setq org-confirm-babel-evaluate nil)
-
-;; Display/update images in the buffer after I evaluate
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+  (add-hook 'org-mode-hook #'org-indent-mode)
+  ;; org-babel settings
+  (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append))
 
 ;; Capture templates
-(if (and (boundp 'my/org-task-file) (boundp 'my/org-notes-files))
+(if (and (boundp 'my/org-task-file) (boundp 'my/org-notes-file))
     (setq org-capture-templates
           `(("t"
              "Task"
@@ -35,9 +38,4 @@
              "Detailed Task"
              entry
              (file my/org-task-file)
-             "* TODO %^{Task}\nCAPTURED: %<%Y-%m-%d %H:%M>\n%?\n")
-            ("r"
-             "Recommendation"
-             entry
-             (file my/org-notes-file)
-             "* RECOMMENDATION %? :%^{Type}:\nCAPTURED: %<%Y-%m-%d %H:%M>"))))
+             "* TODO %^{Task}\nCAPTURED: %<%Y-%m-%d %H:%M>\n%?\n"))))

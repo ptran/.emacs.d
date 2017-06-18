@@ -1,4 +1,4 @@
- ;; global_settings.el
+;; global_settings.el
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
@@ -36,8 +36,7 @@
 (setq x-select-enable-clipboard t)
 
 ;; Check if the font exists and set it
-(defvar my/font-type "Source Code Pro-10:antialiasing=True:hinting=True")
-;; (defvar my/font-type "Inconsolata-12:antialiasing=True:hinting=True")
+(defvar my/font-type "Source Code Pro-9:antialiasing=True:hinting=True")
 (defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
 (if (window-system)
     (if (font-exists-p my/font-type)
@@ -298,7 +297,6 @@
 ;; Markdown-Mode
 ;; ---------------------------------------------------------------------------
 (use-package markdown-mode
-  :if (eq system-type 'gnu/linux)
   :ensure t
   :commands
   (markdown-mode gfm-mode)
@@ -317,6 +315,15 @@
   :if (eq system-type 'gnu/linux)
   :config
   (defun my/flymd-browser-function (url)
-    (let ((browse-url-browser-function 'browse-url-firefox))
+    (let ((browse-url-browser-function 'browse-url-chromium))
       (browse-url url)))
   (setq flymd-browser-open-function 'my/flymd-browser-function))
+
+;; pomidor
+;; ---------------------------------------------------------------------------
+(use-package pomidor
+  :ensure t
+  :config
+  (setq pomidor-sound-tick nil
+        pomidor-sound-tack nil
+        pomidor-sound-overwork nil))

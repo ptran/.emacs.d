@@ -25,9 +25,3 @@
   (setq TeX-PDF-mode t)
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t))
-
-;; latex-preview-pane
-;; ---------------------------------------------------------------------------
-(use-package latex-preview-pane
-  :after tex
-  :ensure t)

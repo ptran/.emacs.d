@@ -32,10 +32,17 @@
           `(("t"
              "Task"
              entry
-             (file my/org-task-file)
+             (file+headline my/org-task-file "Tasks")
              "* TODO %?\nCAPTURED: %<%Y-%m-%d %H:%M>")
             ("T"
              "Detailed Task"
              entry
-             (file my/org-task-file)
+             (file+headline my/org-task-file "Tasks")
              "* TODO %^{Task}\nCAPTURED: %<%Y-%m-%d %H:%M>\n%?\n"))))
+
+;; Make org file bullets look nice
+(use-package org-bullets
+  :after org
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))

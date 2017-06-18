@@ -134,10 +134,10 @@
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes
-(use-package doom-themes
+(use-package kaolin-theme
   :ensure t
   :config
-  (load-theme 'doom-one t))
+  (load-theme 'kaolin t))
 
 ;; smart-mode-line
 ;; ---------------------------------------------------------------------------

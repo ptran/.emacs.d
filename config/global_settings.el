@@ -327,3 +327,9 @@
   (setq pomidor-sound-tick nil
         pomidor-sound-tack nil
         pomidor-sound-overwork nil))
+
+;; ledger-mode
+;; ---------------------------------------------------------------------------
+(use-package ledger-mode
+  :ensure t
+  :mode "\\.dat\\'")

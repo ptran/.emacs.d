@@ -24,12 +24,17 @@
   (add-hook 'org-mode-hook #'org-indent-mode)
   ;; org-babel settings
   (setq org-confirm-babel-evaluate nil)
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append))
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (ledger . t))))
 
 ;; Capture templates
 (if (and (boundp 'my/org-task-file) (boundp 'my/org-notes-file))
     (setq org-capture-templates
-          `(("t"
+          '(("t"
              "Task"
              entry
              (file+headline my/org-task-file "Tasks")
@@ -39,6 +44,8 @@
              entry
              (file+headline my/org-task-file "Tasks")
              "* TODO %^{Task}\nCAPTURED: %<%Y-%m-%d %H:%M>\n%?\n"))))
+
+;; TODO Add ledger capture templates
 
 ;; Make org file bullets look nice
 (use-package org-bullets

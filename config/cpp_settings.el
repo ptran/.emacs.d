@@ -39,7 +39,8 @@
   :after company
   :ensure t
   :config
-  (add-hook 'c-mode-common-hook #'company-mode)
+  (add-hook 'c-mode-hook #'company-mode)
+  (add-hook 'c++-mode-hook #'company-mode)
   (add-to-list 'company-backends 'company-irony))
 
 (use-package company-irony-c-headers

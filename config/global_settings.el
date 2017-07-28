@@ -312,10 +312,10 @@
 (use-package flymd
   :after markdown-mode
   :ensure t
-  :if (eq system-type 'gnu/linux)
+  :if (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
   :config
   (defun my/flymd-browser-function (url)
-    (let ((browse-url-browser-function 'browse-url-chromium))
+    (let ((browse-url-browser-function 'browse-url-firefox))
       (browse-url url)))
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 

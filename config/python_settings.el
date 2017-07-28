@@ -27,7 +27,7 @@
 (use-package flycheck
   :after python
   :no-require t
-  :config 
+  :config
   (add-hook 'python-mode-hook 'flycheck-mode))
 
 ;; Anaconda-mode
@@ -60,9 +60,33 @@
 ;; ---------------------------------------------------------------------------
 (use-package ein
   :if (executable-find "ipython")
-  :after (python anaconda-mode)
+  :after (python anaconda-mode company)
   :no-require t
   :ensure t
   :config
   ;; Hack below
-  (setq ein:get-ipython-major-version 5))
+  (setq ein:get-ipython-major-version 5)
+  ;; https://github.com/millejoh/emacs-ipython-notebook/issues/157
+  (add-hook 'ein:notebook-mode-hook #'anaconda-mode)
+  (defun user-ein-reply-callback (args content -metadata-not-used-)
+    (let ((callback (plist-get args :callback))
+          (candidates (plist-get content :matches)))
+      (funcall callback candidates)))
+
+  (defun user-company-ein-callback (callback)
+    (ein:kernel-complete
+     (ein:get-kernel)
+     (thing-at-point 'line)
+     (current-column)
+     (list :complete_reply
+           (cons #'user-ein-reply-callback (list :callback callback)))))
+
+  (defun user-company-ein-backend (command &optional arg &rest ignored)
+    (interactive (list 'interactive))
+    (case command
+      (interactive (company-begin-backend 'user-company-ein-backend))
+      (prefix (company-anaconda-prefix))
+      (candidates (cons :async #'user-company-ein-callback))
+      (location nil)
+      (sorted t)))
+  (add-to-list 'company-backends #'user-company-ein-backend))

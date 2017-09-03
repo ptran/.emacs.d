@@ -283,7 +283,8 @@
   :bind
   (("C-c y" . yas-expand))
   :init
-  (setq yas-snippet-dirs (concat dot-d-dir "snippets"))
+  (setq my/yas-snippet-dir (concat dot-d-dir "snippets"))
+  (setq yas-snippet-dirs '(my/yas-snippet-dir))
   :config
   (yas-global-mode 1))
 

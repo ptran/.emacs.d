@@ -42,17 +42,22 @@
            nil
          t))
 
+;; Set font for stand-alone GUI emacs
 (if (display-graphic-p)
     (if (font-exists-p my/font-type)
-	(set-face-attribute 'default nil :font my/font-type)))
+        (set-face-attribute 'default nil :font my/font-type)))
 
+;; Set font for generated frames (daemon)
 (defun my/set-frame-font (frame) "sets frame font if font exists"
        (select-frame frame)
        (if (font-exists-p my/font-type)
            (set-frame-font my/font-type)))
-
 (if (daemonp)
     (add-hook 'after-make-frame-functions #'my/set-frame-font))
+
+;; Set default frame size
+(add-to-list 'default-frame-alist '(height . 55))
+(add-to-list 'default-frame-alist '(width . 140))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)

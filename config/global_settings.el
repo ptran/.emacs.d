@@ -37,10 +37,22 @@
 
 ;; Check if the font exists and set it
 (defvar my/font-type "Source Code Pro-9:antialiasing=True:hinting=True")
-(defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
-(if (window-system)
+(defun font-exists-p (font) "check if font exists"
+       (if (null (x-list-fonts font))
+           nil
+         t))
+
+(if (display-graphic-p)
     (if (font-exists-p my/font-type)
-        (set-face-attribute 'default nil :font my/font-type)))
+	(set-face-attribute 'default nil :font my/font-type)))
+
+(defun my/set-frame-font (frame) "sets frame font if font exists"
+       (select-frame frame)
+       (if (font-exists-p my/font-type)
+           (set-frame-font my/font-type)))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'my/set-frame-font))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)

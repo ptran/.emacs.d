@@ -2,7 +2,6 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.3
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)

@@ -2,7 +2,6 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.3
 
 ;; =============== ;;
 ;;  Configuration  ;;
@@ -109,8 +108,6 @@
 
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
-(global-set-key (kbd "C-S-n") (lambda () (interactive) (forward-line 5)))
-(global-set-key (kbd "C-S-p") (lambda () (interactive) (forward-line -5)))
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
 

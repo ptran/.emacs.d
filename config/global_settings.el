@@ -2,7 +2,6 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.3
 
 ;; =============== ;;
 ;;  Configuration  ;;
@@ -37,10 +36,27 @@
 
 ;; Check if the font exists and set it
 (defvar my/font-type "Source Code Pro-9:antialiasing=True:hinting=True")
-(defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
-(if (window-system)
+(defun font-exists-p (font) "check if font exists"
+       (if (null (x-list-fonts font))
+           nil
+         t))
+
+;; Set font for stand-alone GUI emacs
+(if (display-graphic-p)
     (if (font-exists-p my/font-type)
         (set-face-attribute 'default nil :font my/font-type)))
+
+;; Set font for generated frames (daemon)
+(defun my/set-frame-font (frame) "sets frame font if font exists"
+       (select-frame frame)
+       (if (font-exists-p my/font-type)
+           (set-frame-font my/font-type)))
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'my/set-frame-font))
+
+;; Set default frame size
+(add-to-list 'default-frame-alist '(height . 55))
+(add-to-list 'default-frame-alist '(width . 140))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)
@@ -92,8 +108,6 @@
 
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
-(global-set-key (kbd "C-S-n") (lambda () (interactive) (forward-line 5)))
-(global-set-key (kbd "C-S-p") (lambda () (interactive) (forward-line -5)))
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
 
@@ -283,7 +297,8 @@
   :bind
   (("C-c y" . yas-expand))
   :init
-  (setq yas-snippet-dirs (concat dot-d-dir "snippets"))
+  (setq my/yas-snippet-dir (concat dot-d-dir "snippets"))
+  (setq yas-snippet-dirs '(my/yas-snippet-dir))
   :config
   (yas-global-mode 1))
 

@@ -2,7 +2,6 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
-;; Version: 0.1.3
 ;;
 ;;                     ░░░░░░░░░ 
 ;;                     ░░░░▄▀▀▀▀▀█▀▄▄▄▄░░░░
@@ -38,8 +37,7 @@
             nil (delete-process (make-network-process
                                  :name "my-check-internet"
                                  :host "elpa.gnu.org"
-                                 :service 80)) (error t))
-  (setq my-online-p t))
+                                 :service 80)) (error t)) (setq my-online-p t))
 
 (when my-online-p
   (package-refresh-contents))

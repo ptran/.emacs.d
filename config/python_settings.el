@@ -59,13 +59,11 @@
 ;; Emacs Ipython Notebook (EIN)
 ;; ---------------------------------------------------------------------------
 (use-package ein
-  :if (executable-find "ipython")
+  :if (and (executable-find "jupyter") (> emacs-major-version 24))
   :after (python anaconda-mode company)
   :no-require t
   :ensure t
   :config
-  ;; Hack below
-  (setq ein:get-ipython-major-version 5)
   ;; https://github.com/millejoh/emacs-ipython-notebook/issues/157
   (add-hook 'ein:notebook-mode-hook #'anaconda-mode)
   (defun user-ein-reply-callback (args content -metadata-not-used-)
@@ -89,4 +87,4 @@
       (candidates (cons :async #'user-company-ein-callback))
       (location nil)
       (sorted t)))
-  (add-to-list 'company-backends #'user-company-ein-backend))
+  (add-to-list 'company-backends #'user-company-ein-backend t))

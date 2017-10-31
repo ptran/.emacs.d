@@ -148,10 +148,10 @@
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes
-(use-package kaolin-theme
+(use-package kaolin-themes
   :ensure t
   :config
-  (load-theme 'kaolin t))
+  (load-theme 'kaolin-dark t))
 
 ;; smart-mode-line
 ;; ---------------------------------------------------------------------------

@@ -6,9 +6,9 @@
 ;; =============== ;;
 ;;  Configuration  ;;
 ;; =============== ;;
-(defconst emacs-backup-dir "~/.emacs.backup/" "directory backup files")
-(defconst emacs-auto-save-dir "~/.emacs.autosave/" "directory auto-save files")
-(defconst my/markdown-command "/usr/bin/pandoc" "program used for markdown generation")
+(defconst emacs-backup-dir "~/.emacs.backup/" "Directory fir backup files")
+(defconst emacs-auto-save-dir "~/.emacs.autosave/" "Directory for auto-save files")
+(defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation")
 ;;
 
 ;; Stop that noob shit at startup

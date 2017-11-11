@@ -6,9 +6,8 @@
 ;; =============== ;;
 ;;  Configuration  ;;
 ;; =============== ;;
-(defconst my/org-agenda-files "~/Dropbox/Documents/Org" "Directory storing all files to be tracked by org-agenda")
-(defconst my/org-task-file (concat my/org-agenda-files "/todo.org") "Org file for keeping track of tasks")
-(defconst my/org-notes-file (concat my/org-agenda-files "/notes.org") "Org file for taking notes")
+(defconst my/org-task-file "~/Dropbox/Documents/Org/todo.org" "Org file for keeping track of tasks")
+(defconst my/org-notes-file "~/Dropbox/Documents/Org/notes.org" "Org file for taking notes")
 (defconst my/appt-notification-app "~/bin/appt-notification" "Program to run for upcoming appointment reminders")
 ;;
 
@@ -19,7 +18,7 @@
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture))
   :config
-  (setq org-agenda-files '("~/Dropbox/Documents/Org"))
+  (setq org-agenda-files `(,my/org-task-file))
   (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
   (setq org-log-done t)
   (add-hook 'org-mode-hook #'org-indent-mode)

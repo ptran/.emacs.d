@@ -9,7 +9,7 @@
 (defconst my/org-agenda-files "~/Dropbox/Documents/Org" "Directory storing all files to be tracked by org-agenda")
 (defconst my/org-task-file (concat my/org-agenda-files "/todo.org") "Org file for keeping track of tasks")
 (defconst my/org-notes-file (concat my/org-agenda-files "/notes.org") "Org file for taking notes")
-(defconst my/appt-notification-app "~/bin/appt-notification.sh" "Program to run for upcoming appointment reminders")
+(defconst my/appt-notification-app "~/bin/appt-notification" "Program to run for upcoming appointment reminders")
 ;;
 
 ;; Templates defined in private_settings.el
@@ -58,39 +58,38 @@
 ;; ---
 ;; SOURCE: https://emacs.stackexchange.com/questions/3844/good-methods-for-setting-up-alarms-audio-visual-triggered-by-org-mode-events/5821#5821
 ;; TODO: Make sure this works properly
-(require 'appt)
-(appt-activate t)
+(use-package appt
+  :after org
+  :init
+  (defun my/org-agenda-to-appt ()
+    ;; Use appointment data from org-mode
+    (interactive)
+    (setq appt-time-msg-list nil)
+    (org-agenda-to-appt))
+  (setq appt-message-warning-time 15) ; Show notification 15 minutes before event
+  (setq appt-display-interval 5) ; Disable multiple reminders
+  (setq appt-display-mode-line nil)
+  :config
+  (appt-activate t)
+  ;; Update alarms when...
+  ;; (1) ... Starting Emacs
+  (my/org-agenda-to-appt)
 
-(setq appt-message-warning-time 15) ; Show notification 15 minutes before event
-(setq appt-display-interval appt-message-warning-time) ; Disable multiple reminders
-(setq appt-display-mode-line nil)
+  ;; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
+  (run-at-time "12:05am" (* 24 3600) 'my/org-agenda-to-appt)
 
-(defun my/org-agenda-to-appt ()
-  ;; Use appointment data from org-mode
-  (interactive)
-  (setq appt-time-msg-list nil)
-  (org-agenda-to-appt))
+  ;; (3) ... When todo.org is saved
+  (add-hook 'after-save-hook
+            '(lambda ()
+               (if (string= (buffer-file-name) my/org-task-file)
+                   (my/org-agenda-to-appt))))
 
-;; Update alarms when...
-;; (1) ... Starting Emacs
-(my/org-agenda-to-appt)
-
-;; (2) ... Everyday at 12:05am (useful in case you keep Emacs always on)
-(run-at-time "12:05am" (* 24 3600) 'my/org-agenda-to-appt)
-
-;; (3) ... When TODO.txt is saved
-(add-hook 'after-save-hook
-          '(lambda ()
-             (if (string= (buffer-file-name) my/org-task-file)
-                 (my/org-agenda-to-appt))))
-
-;; Display appointments as a window manager notification
-(setq appt-disp-window-function 'my/appt-display)
-(setq appt-delete-window-function (lambda () t))
-
-(defun my/appt-display (min-to-app new-time msg)
-  (if (atom min-to-app)
-      (start-process "my/appt-notification-app" nil my/appt-notification-app min-to-app msg)
-    (dolist (i (number-sequence 0 (1- (length min-to-app))))
-      (start-process "my/appt-notification-app" nil my/appt-notification-app (nth i min-to-app) (nth i msg)))))
+  ;; Display appointments as a window manager notification
+  (setq appt-disp-window-function 'my/appt-display)
+  (setq appt-delete-window-function (lambda () t))
+  (defun my/appt-display (min-to-app new-time msg)
+    (if (atom min-to-app)
+        (start-process "my/appt-notification-app" nil my/appt-notification-app min-to-app msg)
+      (dolist (i (number-sequence 0 (1- (length min-to-app))))
+        (start-process "my/appt-notification-app" nil my/appt-notification-app (nth i min-to-app) (nth i msg))))))
 ;; ---

@@ -102,6 +102,9 @@
 (electric-pair-mode 1)
 (show-paren-mode 1)
 
+;; Spell check in text modes
+(add-hook 'text-mode-hook #'turn-on-flyspell)
+
 ;; Nice-to-have keybindings
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (add-hook 'ibuffer-mode-hook #'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:

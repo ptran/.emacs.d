@@ -58,6 +58,7 @@
 ;; SOURCE: https://emacs.stackexchange.com/questions/3844/good-methods-for-setting-up-alarms-audio-visual-triggered-by-org-mode-events/5821#5821
 ;; TODO: Make sure this works properly
 (use-package appt
+  :if (file-exists-p my/appt-notification-app)
   :after org
   :init
   (defun my/org-agenda-to-appt ()

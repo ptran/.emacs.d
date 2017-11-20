@@ -157,7 +157,7 @@
   (load-theme 'kaolin-dark t))
 
 ;; smart-mode-line
-;; ---------------------------------------------------------------------------
+;; ---------------
 (use-package smart-mode-line
   :ensure t
   :init
@@ -167,7 +167,7 @@
   (sml/setup))
 
 ;; Ibuffer-vc
-;; ---------------------------------------------------------------------------
+;; ----------
 (use-package ibuffer-vc
   :demand t
   :ensure t
@@ -180,7 +180,7 @@
   (add-hook 'ibuffer-hook #'my/ibuffer-vc-hook))
 
 ;; Hippie-expand
-;; ---------------------------------------------------------------------------
+;; -------------
 (use-package hippie-expand
   :init
   (setq hippie-expand-try-functions-list
@@ -193,7 +193,7 @@
   (("M-/" . hippie-expand)))
 
 ;; Fill Column Indicator
-;; ---------------------------------------------------------------------------
+;; ---------------------
 (use-package fill-column-indicator
   :ensure t
   :init
@@ -203,7 +203,7 @@
   (add-hook 'prog-mode-hook #'fci-mode))
 
 ;; Whitespace
-;; ---------------------------------------------------------------------------
+;; ----------
 (use-package whitespace
   :ensure t
   :diminish whitespace-mode
@@ -211,7 +211,7 @@
   (setq whitespace-line-column 120))
 
 ;; Undo-tree
-;; ---------------------------------------------------------------------------
+;; ---------
 (use-package undo-tree
   :ensure t
   :demand t
@@ -224,7 +224,7 @@
   (global-undo-tree-mode 1))
 
 ;; Ivy
-;; ---------------------------------------------------------------------------
+;; ---
 (use-package ivy
   :ensure t
   :demand t
@@ -249,7 +249,7 @@
   :ensure t)
 
 ;; Projectile
-;; ---------------------------------------------------------------------------
+;; ----------
 (use-package projectile
   :after ivy
   :ensure t
@@ -267,7 +267,7 @@
   (counsel-projectile-on))
 
 ;; Magit
-;; ---------------------------------------------------------------------------
+;; -----
 (use-package magit
   :if (not (version< emacs-version "24.4"))
   :ensure t
@@ -275,7 +275,7 @@
   (("C-c m" . magit-status)))
 
 ;; Company
-;; ---------------------------------------------------------------------------
+;; -------
 (use-package company
   :ensure t
   :diminish company-mode
@@ -293,7 +293,7 @@
   (global-company-mode 1))
 
 ;; Yasnippet
-;; ---------------------------------------------------------------------------
+;; ---------
 (use-package yasnippet
   :ensure t
   :diminish yasnippet-mode
@@ -306,14 +306,14 @@
   (yas-global-mode 1))
 
 ;; Flycheck
-;; ---------------------------------------------------------------------------
+;; --------
 (use-package flycheck
   :if (not (version< emacs-version "24.3"))
   :ensure t
   :diminish flycheck-mode)
 
 ;; Markdown-Mode
-;; ---------------------------------------------------------------------------
+;; -------------
 (use-package markdown-mode
   :ensure t
   :commands
@@ -326,7 +326,7 @@
   (setq markdown-command my/markdown-command))
 
 ;; flymd
-;; ---------------------------------------------------------------------------
+;; -----
 (use-package flymd
   :after markdown-mode
   :ensure t
@@ -338,7 +338,7 @@
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 
 ;; pomidor
-;; ---------------------------------------------------------------------------
+;; -------
 (use-package pomidor
   :ensure t
   :config
@@ -347,7 +347,7 @@
         pomidor-sound-overwork nil))
 
 ;; ledger-mode
-;; ---------------------------------------------------------------------------
+;; -----------
 (use-package ledger-mode
   :ensure t
   :mode "\\.dat\\'")

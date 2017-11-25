@@ -193,6 +193,7 @@
     "aa"  'align-regexp
     "b"   'ivy-switch-buffer
     "cc"  'company-complete
+    "f"   'find-file
     "k"   'kill-this-buffer
     "l"   'whitespace-mode
     "L"   'delete-trailing-whitespace

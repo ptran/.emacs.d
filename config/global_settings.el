@@ -35,7 +35,7 @@
 (setq x-select-enable-clipboard t)
 
 ;; Check if the font exists and set it
-(defvar my/font-type "Source Code Pro-9:antialiasing=True:hinting=True")
+(defvar my/font-type "Source Code Pro:antialiasing=True:hinting=True")
 (defun font-exists-p (font) "check if font exists"
        (if (null (x-list-fonts font))
            nil
@@ -45,6 +45,7 @@
 (if (display-graphic-p)
     (if (font-exists-p my/font-type)
         (set-face-attribute 'default nil :font my/font-type)))
+(set-face-attribute 'default nil :height 100)
 
 ;; Set font for generated frames (daemon)
 (defun my/set-frame-font (frame) "sets frame font if font exists"

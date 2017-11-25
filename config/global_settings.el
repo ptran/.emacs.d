@@ -126,6 +126,10 @@
    ("C-c w d" . windmove-right)
    ("C-c w s" . windmove-down)))
 
+;; Store the custom settings in a separate file
+(setq custom-file (concat dot-d-dir "custom.el"))
+(load custom-file 'noerror)
+
 ;; ===========================================================================
 ;;                              CUDA MODE
 ;; ===========================================================================

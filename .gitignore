@@ -13,3 +13,4 @@ session*
 *.dat
 
 private_settings.el
+custom.el

@@ -211,12 +211,6 @@
     "y"   'yank-to-x-clipboard)
   (global-evil-leader-mode))
 
-(use-package evil-jumper
-  :after evil
-  :ensure t
-  :config
-  (global-evil-jumper-mode))
-
 (use-package evil-surround
   :after evil
   :ensure t

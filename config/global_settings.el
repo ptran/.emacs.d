@@ -3,12 +3,10 @@
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
 
-;; =============== ;;
-;;  Configuration  ;;
-;; =============== ;;
-(defconst emacs-backup-dir "~/.emacs.backup/" "Directory fir backup files")
-(defconst emacs-auto-save-dir "~/.emacs.autosave/" "Directory for auto-save files")
-(defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation")
+;; Check if configurables exist; if not, set them to default values
+(unless (boundp 'emacs-backup-dir) (defconst emacs-backup-dir "/tmp" "Directory for backup files"))
+(unless (boundp 'emacs-auto-save-dir) (defconst emacs-auto-save-dir "/tmp" "Directory for auto-save files"))
+(unless (boundp 'my/markdown-coommand) (defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation"))
 ;;
 
 ;; Stop that noob shit at startup
@@ -45,7 +43,9 @@
 (if (display-graphic-p)
     (if (font-exists-p my/font-type)
         (set-face-attribute 'default nil :font my/font-type)))
-(set-face-attribute 'default nil :height 100)
+
+(unless (boundp 'my/font-size) (setq my/font-size 100))  ; check if my/font-size is defined; if not, set it to 100
+(set-face-attribute 'default nil :height my/font-size)
 
 ;; Set font for generated frames (daemon)
 (defun my/set-frame-font (frame) "sets frame font if font exists"
@@ -117,14 +117,6 @@
 ;; Indentation for org source code blocks
 (setq org-src-tab-acts-natively t)
 
-;; Switching through windows
-(use-package windmove
-  :bind
-  (("C-c w a" . windmove-left)
-   ("C-c w w" . windmove-up)
-   ("C-c w d" . windmove-right)
-   ("C-c w s" . windmove-down)))
-
 ;; Store the custom settings in a separate file
 (setq custom-file (concat dot-d-dir "custom.el"))
 (load custom-file 'noerror)
@@ -159,76 +151,6 @@
   :ensure t
   :config
   (load-theme 'kaolin-dark t))
-
-;; evil
-;; ----
-(use-package evil
-  :ensure t
-  :config
-  (evil-mode 1)
-  ;; Use Emacs state in these additional modes.
-  (dolist (mode '(dired-mode eshell-mode))
-    (add-to-list 'evil-emacs-state-modes mode))
-  (delete 'eshell-mode evil-insert-state-modes)
-
-  ;; Make escape quit everything, whenever possible.
-  (define-key evil-normal-state-map [escape] 'keyboard-escape-quit)
-  (define-key evil-visual-state-map [escape] 'keyboard-quit)
-  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
-
-(use-package evil-leader
-  :after evil
-  :ensure t
-  :config
-  (evil-leader/set-leader ",")
-  (evil-leader/set-key
-    ","   'other-window
-    "."   'mode-line-other-buffer
-    ":"   'eval-expression
-    "aa"  'align-regexp
-    "b"   'ivy-switch-buffer
-    "f"   'find-file
-    "k"   'kill-this-buffer
-    "l"   'whitespace-mode
-    "L"   'delete-trailing-whitespace
-    "m"   'magit-status
-    "o"   'delete-other-windows
-    "pp"  'projectile-switch-project
-    "pb"  'projectile-switch-to-buffer
-    "pf"  'projectile-find-file
-    "psg" 'projectile-grep
-    "py"  'counsel-yank-pop
-    "s"   'swiper
-    "wh"  'windmove-left
-    "wj"  'windmove-down
-    "wk"  'windmove-up
-    "wl"  'windmove-right
-    "x"   'counsel-M-x)
-  (global-evil-leader-mode))
-
-(use-package evil-surround
-  :after evil
-  :ensure t
-  :config
-  (global-evil-surround-mode))
-
-(use-package evil-indent-textobject
-  :after evil
-  :ensure t)
-
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :custom (evil-collection-setup-minibuffer t)
-  :init (evil-collection-init))
-
-(use-package evil-magit
-  :after evil
-  :ensure t)
 
 ;; smart-mode-line
 ;; ---------------
@@ -273,7 +195,7 @@
   :init
   (setq-default fill-column 120)
   (setq-default fci-rule-color "gray")
-  (setq-default fci-rule-width 5)
+  (setq-default fci-rule-width 2)
   (add-hook 'prog-mode-hook #'fci-mode))
 
 ;; Whitespace
@@ -331,9 +253,7 @@
 
 (use-package counsel-projectile
   :after projectile
-  :ensure t
-  :config
-  (counsel-projectile-on))
+  :ensure t)
 
 ;; Magit
 ;; -----
@@ -360,8 +280,6 @@
 (use-package yasnippet
   :ensure t
   :diminish yasnippet-mode
-  :bind
-  (("C-c y" . yas-expand))
   :init
   (setq my/yas-snippet-dir (concat dot-d-dir "snippets"))
   (setq yas-snippet-dirs '(my/yas-snippet-dir))
@@ -391,6 +309,7 @@
 ;; flymd
 ;; -----
 (use-package flymd
+  :if (executable-find "firefox")
   :after markdown-mode
   :ensure t
   :if (or (eq system-type 'gnu/linux) (eq system-type 'darwin))
@@ -400,17 +319,73 @@
       (browse-url url)))
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 
-;; pomidor
-;; -------
-(use-package pomidor
+;; evil
+;; ----
+(use-package evil
   :ensure t
   :config
-  (setq pomidor-sound-tick nil
-        pomidor-sound-tack nil
-        pomidor-sound-overwork nil))
+  (evil-mode 1)
+  ;; Use Emacs state in these additional modes.
+  (dolist (mode '(dired-mode eshell-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
+  (delete 'eshell-mode evil-insert-state-modes)
 
-;; ledger-mode
-;; -----------
-(use-package ledger-mode
+  ;; Make escape quit everything, whenever possible.
+  (define-key evil-normal-state-map [escape] 'keyboard-escape-quit)
+  (define-key evil-visual-state-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
+
+(use-package evil-leader
+  :after evil
   :ensure t
-  :mode "\\.dat\\'")
+  :config
+  (evil-leader/set-leader ",")
+  (evil-leader/set-key
+    ","   'other-window
+    "."   'mode-line-other-buffer
+    ":"   'eval-expression
+    "aa"  'align-regexp
+    "b"   'ivy-switch-buffer
+    "f"   'find-file
+    "k"   'kill-this-buffer
+    "l"   'whitespace-mode
+    "L"   'delete-trailing-whitespace
+    "m"   'magit-status
+    "o"   'delete-other-windows
+    "pp"  'projectile-switch-project
+    "pb"  'projectile-switch-to-buffer
+    "pf"  'projectile-find-file
+    "psg" 'projectile-grep
+    "py"  'counsel-yank-pop
+    "s"   'swiper
+    "wh"  'windmove-left ;; Switching through windows
+    "wj"  'windmove-down
+    "wk"  'windmove-up
+    "wl"  'windmove-right
+    "x"   'counsel-M-x
+    "y"   'yas-expand)
+  (global-evil-leader-mode))
+
+(use-package evil-surround
+  :after evil
+  :ensure t
+  :config
+  (global-evil-surround-mode))
+
+(use-package evil-indent-textobject
+  :after evil
+  :ensure t)
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :custom (evil-collection-setup-minibuffer t)
+  :init (evil-collection-init))
+
+(use-package evil-magit
+  :after evil magit
+  :ensure t)

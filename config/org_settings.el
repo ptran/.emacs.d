@@ -32,7 +32,6 @@
      (ledger . t))))
 
 ;; Capture templates
-;; TODO Add ledger capture templates
 (if (and (boundp 'my/org-task-file) (boundp 'my/org-notes-file))
     (setq org-capture-templates
           '(("t"

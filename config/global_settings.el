@@ -110,7 +110,6 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (add-hook 'ibuffer-mode-hook #'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:
 
-(global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
@@ -192,7 +191,6 @@
     ":"   'eval-expression
     "aa"  'align-regexp
     "b"   'ivy-switch-buffer
-    "cc"  'company-complete
     "f"   'find-file
     "k"   'kill-this-buffer
     "l"   'whitespace-mode
@@ -204,11 +202,12 @@
     "pf"  'projectile-find-file
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
-    "rt"  'replace-rectangle
     "s"   'swiper
-    "w"   'save-buffer
-    "x"   'counsel-M-x
-    "y"   'yank-to-x-clipboard)
+    "wh"  'windmove-left
+    "wj"  'windmove-down
+    "wk"  'windmove-up
+    "wl"  'windmove-right
+    "x"   'counsel-M-x)
   (global-evil-leader-mode))
 
 (use-package evil-surround
@@ -218,6 +217,16 @@
   (global-evil-surround-mode))
 
 (use-package evil-indent-textobject
+  :after evil
+  :ensure t)
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :custom (evil-collection-setup-minibuffer t)
+  :init (evil-collection-init))
+
+(use-package evil-magit
   :after evil
   :ensure t)
 
@@ -281,9 +290,7 @@
   :ensure t
   :demand t
   :bind
-  (("C-_" . undo)
-   ("M-_" . redo)
-   ("C-x u" . undo-tree-visualize))
+  (("C-x u" . undo-tree-visualize))
   :diminish undo-tree-mode
   :config
   (global-undo-tree-mode 1))

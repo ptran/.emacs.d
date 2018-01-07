@@ -56,7 +56,7 @@
     (add-hook 'after-make-frame-functions #'my/set-frame-font))
 
 ;; Set default frame size
-(add-to-list 'default-frame-alist '(height . 55))
+(add-to-list 'default-frame-alist '(height . 40))
 (add-to-list 'default-frame-alist '(width . 140))
 
 ;; UTF-8 encoding
@@ -110,7 +110,6 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (add-hook 'ibuffer-mode-hook #'ibuffer-auto-mode) ; auto-refresh ibuffer :B1:
 
-(global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'eshell)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
@@ -160,6 +159,76 @@
   :ensure t
   :config
   (load-theme 'kaolin-dark t))
+
+;; evil
+;; ----
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1)
+  ;; Use Emacs state in these additional modes.
+  (dolist (mode '(dired-mode eshell-mode))
+    (add-to-list 'evil-emacs-state-modes mode))
+  (delete 'eshell-mode evil-insert-state-modes)
+
+  ;; Make escape quit everything, whenever possible.
+  (define-key evil-normal-state-map [escape] 'keyboard-escape-quit)
+  (define-key evil-visual-state-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
+
+(use-package evil-leader
+  :after evil
+  :ensure t
+  :config
+  (evil-leader/set-leader ",")
+  (evil-leader/set-key
+    ","   'other-window
+    "."   'mode-line-other-buffer
+    ":"   'eval-expression
+    "aa"  'align-regexp
+    "b"   'ivy-switch-buffer
+    "f"   'find-file
+    "k"   'kill-this-buffer
+    "l"   'whitespace-mode
+    "L"   'delete-trailing-whitespace
+    "m"   'magit-status
+    "o"   'delete-other-windows
+    "pp"  'projectile-switch-project
+    "pb"  'projectile-switch-to-buffer
+    "pf"  'projectile-find-file
+    "psg" 'projectile-grep
+    "py"  'counsel-yank-pop
+    "s"   'swiper
+    "wh"  'windmove-left
+    "wj"  'windmove-down
+    "wk"  'windmove-up
+    "wl"  'windmove-right
+    "x"   'counsel-M-x)
+  (global-evil-leader-mode))
+
+(use-package evil-surround
+  :after evil
+  :ensure t
+  :config
+  (global-evil-surround-mode))
+
+(use-package evil-indent-textobject
+  :after evil
+  :ensure t)
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :custom (evil-collection-setup-minibuffer t)
+  :init (evil-collection-init))
+
+(use-package evil-magit
+  :after evil
+  :ensure t)
 
 ;; smart-mode-line
 ;; ---------------
@@ -221,9 +290,7 @@
   :ensure t
   :demand t
   :bind
-  (("C-_" . undo)
-   ("M-_" . redo)
-   ("C-x u" . undo-tree-visualize))
+  (("C-x u" . undo-tree-visualize))
   :diminish undo-tree-mode
   :config
   (global-undo-tree-mode 1))
@@ -240,10 +307,7 @@
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   :bind
-  (("C-s" . swiper)
-   ("C-r" . swiper)
-   ("C-c C-r" . ivy-resume)
-   ("M-x" . counsel-M-x)
+  (("M-x" . counsel-M-x)
    ("M-y" . counsel-yank-pop)
    ("C-x C-f" . counsel-find-file))
   :config
@@ -275,9 +339,7 @@
 ;; -----
 (use-package magit
   :if (not (version< emacs-version "24.4"))
-  :ensure t
-  :bind
-  (("C-c m" . magit-status)))
+  :ensure t)
 
 ;; Company
 ;; -------
@@ -290,10 +352,6 @@
         company-idle-delay 0.5
         company-echo-delay 0
         company-show-numbers t)
-  (if (window-system)
-      (bind-key "C-<tab>" 'company-complete)
-    ; C-<tab> does not work in terminal mode
-    (bind-key "C-c c" 'company-complete))
   :config
   (global-company-mode 1))
 

@@ -235,10 +235,6 @@
   (setq ivy-count-format "[%d/%d] ")
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
-  :bind
-  (("M-x" . counsel-M-x)
-   ("M-y" . counsel-yank-pop)
-   ("C-x C-f" . counsel-find-file))
   :config
   (ivy-mode 1))
 
@@ -357,7 +353,7 @@
     ":"   'eval-expression
     "aa"  'align-regexp
     "b"   'ivy-switch-buffer
-    "f"   'find-file
+    "f"   'counsel-find-file
     "k"   'kill-this-buffer
     "l"   'whitespace-mode
     "L"   'delete-trailing-whitespace

@@ -6,9 +6,9 @@
 ;; =============== ;;
 ;;  Configuration  ;;
 ;; =============== ;;
-(defconst my/org-task-file "~/Dropbox/Documents/Org/todo.org" "Org file for keeping track of tasks")
-(defconst my/org-notes-file "~/Dropbox/Documents/Org/notes.org" "Org file for taking notes")
-(defconst my/appt-notification-app "~/Dropbox/bin/appt-notification" "Program to run for upcoming appointment reminders")
+(unless (boundp 'my/org-task-file) (defconst my/org-task-file "~/Dropbox/Documents/Org/todo.org" "Org file for keeping track of tasks"))
+(unless (boundp 'my/org-notes-file) (defconst my/org-notes-file "~/Dropbox/Documents/Org/notes.org" "Org file for taking notes"))
+(unless (boundp 'my/appt-notification-app) (defconst my/appt-notification-app "~/Dropbox/bin/appt-notification" "Program to run for upcoming appointment reminders"))
 ;;
 
 ;; Templates defined in private_settings.el

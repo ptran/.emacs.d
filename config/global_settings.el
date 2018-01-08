@@ -114,6 +114,13 @@
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
 
+;; Prevent eshell from shifting to the bottom of the buffer after executing a command
+;; https://emacs.stackexchange.com/questions/28819/eshell-goes-to-the-bottom-of-the-page-after-executing-a-command/28821
+(defun my/eshell-mode-setup ()
+            (remove-hook 'eshell-output-filter-functions
+                         'eshell-postoutput-scroll-to-bottom))
+(add-hook 'eshell-mode-hook 'my/eshell-mode-setup)
+
 ;; Indentation for org source code blocks
 (setq org-src-tab-acts-natively t)
 
@@ -362,7 +369,7 @@
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
     "s"   'swiper
-    "wh"  'windmove-left ;; Switching through windows
+    "wh"  'windmove-left ;; switching through windows
     "wj"  'windmove-down
     "wk"  'windmove-up
     "wl"  'windmove-right

@@ -6,7 +6,7 @@
 ;; Check if configurables exist; if not, set them to default values
 (unless (boundp 'emacs-backup-dir) (defconst emacs-backup-dir "/tmp" "Directory for backup files"))
 (unless (boundp 'emacs-auto-save-dir) (defconst emacs-auto-save-dir "/tmp" "Directory for auto-save files"))
-(unless (boundp 'my/markdown-coommand) (defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation"))
+(unless (boundp 'my/markdown-command) (defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation"))
 ;;
 
 ;; Stop that noob shit at startup

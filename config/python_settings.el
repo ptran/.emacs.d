@@ -8,17 +8,15 @@
   :interpreter ("python" . python-mode)
   :init
   (if (executable-find "ipython")
-      (setq-default python-shell-interpreter "ipython"
-                    python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-                    python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
-                    python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-                    python-shell-completion-setup-code
-                    "from IPython.core.completerlib import module_completion"
-                    python-shell-completion-string-code
-                    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
-  (setq-default python-indent 4
-                python-shell-interpreter-args "--simple-prompt -i")
-  (setq python-shell-prompt-detect-failure-warning nil))
+      (progn
+        (setq python-shell-interpreter "ipython")
+        (if (version< (replace-regexp-in-string "\n$" "" (shell-command-to-string "ipython --version")) "5")
+            (setq python-shell-interpreter-args "-i")
+          (setq python-shell-interpreter-args "--simple-prompt -i")))
+    ;; Condition if ipython can't be found
+      (setq python-shell-interpreter "python"
+            python-shell-interpreter-args "-i"))
+  (setq python-indent-offset 4))
 
 ;; Display line number
 (add-hook 'python-mode-hook (lambda () (linum-mode 1)))

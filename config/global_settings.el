@@ -4,9 +4,12 @@
 ;; URL:     https://github.com/ptran516/.emacs.d
 
 ;; Check if configurables exist; if not, set them to default values
-(unless (boundp 'emacs-backup-dir) (defconst emacs-backup-dir "/tmp" "Directory for backup files"))
-(unless (boundp 'emacs-auto-save-dir) (defconst emacs-auto-save-dir "/tmp" "Directory for auto-save files"))
-(unless (boundp 'my/markdown-command) (defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation"))
+(unless (boundp 'emacs-backup-dir)
+  (defconst emacs-backup-dir "/tmp" "Directory for backup files"))
+(unless (boundp 'emacs-auto-save-dir)
+  (defconst emacs-auto-save-dir "/tmp" "Directory for auto-save files"))
+(unless (boundp 'my/markdown-command)
+  (defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation"))
 ;;
 
 ;; Stop that noob shit at startup
@@ -44,7 +47,8 @@
     (if (font-exists-p my/font-type)
         (set-face-attribute 'default nil :font my/font-type)))
 
-(unless (boundp 'my/font-size) (setq my/font-size 100))  ; check if my/font-size is defined; if not, set it to 100
+(unless (boundp 'my/font-size)
+  (setq my/font-size 100))  ; check if my/font-size is defined; if not, set it to 100
 (set-face-attribute 'default nil :height my/font-size)
 
 ;; Set font for generated frames (daemon)
@@ -56,8 +60,21 @@
     (add-hook 'after-make-frame-functions #'my/set-frame-font))
 
 ;; Set default frame size
-(add-to-list 'default-frame-alist '(height . 40))
-(add-to-list 'default-frame-alist '(width . 140))
+(if (display-graphic-p)
+    (progn
+      (setq initial-frame-alist '((tool-bar-lines . 0)
+                                  (width . 140)
+                                  (height . 60)
+                                  (left . 40)
+                                  (top . 40)))
+      (setq default-frame-alist '((tool-bar-lines . 0)
+                                  (width . 140)
+                                  (height . 60)
+                                  (left . 40)
+                                  (top . 40))))
+  (progn
+    (setq initial-frame-alist '((tool-bar-lines . 0)))
+    (setq default-frame-alist '((tool-bar-lines . 0)))))
 
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)
@@ -157,7 +174,15 @@
 (use-package kaolin-themes
   :ensure t
   :config
-  (load-theme 'kaolin-dark t))
+  (load-theme 'kaolin-aurora t))
+
+;; highlight-parentheses
+;; ---------------------
+(use-package highlight-parentheses
+  :ensure t
+  :config
+  (setq hl-paren-colors '("DarkSeaGreen1" "SeaGreen1" "SeaGreen3" "SeaGreen4"))
+  (add-hook 'prog-mode-hook (lambda () (highlight-parentheses-mode t))))
 
 ;; smart-mode-line
 ;; ---------------
@@ -169,7 +194,7 @@
   :config
   (sml/setup))
 
-;; Ibuffer-vc
+;; ibuffer-vc
 ;; ----------
 (use-package ibuffer-vc
   :demand t
@@ -182,7 +207,7 @@
       (ibuffer-do-sort-by-alphabetic)))
   (add-hook 'ibuffer-hook #'my/ibuffer-vc-hook))
 
-;; Hippie-expand
+;; hippie-expand
 ;; -------------
 (use-package hippie-expand
   :init
@@ -195,7 +220,7 @@
   :bind
   (("M-/" . hippie-expand)))
 
-;; Fill Column Indicator
+;; fill Column Indicator
 ;; ---------------------
 (use-package fill-column-indicator
   :ensure t
@@ -205,7 +230,7 @@
   (setq-default fci-rule-width 2)
   (add-hook 'prog-mode-hook #'fci-mode))
 
-;; Whitespace
+;; whitespace
 ;; ----------
 (use-package whitespace
   :ensure t
@@ -213,7 +238,7 @@
   :init
   (setq whitespace-line-column 120))
 
-;; Undo-tree
+;; undo-tree
 ;; ---------
 (use-package undo-tree
   :ensure t
@@ -224,7 +249,7 @@
   :config
   (global-undo-tree-mode 1))
 
-;; Ivy
+;; ivy
 ;; ---
 (use-package ivy
   :ensure t
@@ -242,7 +267,7 @@
 (use-package wgrep
   :ensure t)
 
-;; Projectile
+;; projectile
 ;; ----------
 (use-package projectile
   :after ivy
@@ -258,13 +283,13 @@
   :after projectile
   :ensure t)
 
-;; Magit
+;; magit
 ;; -----
 (use-package magit
   :if (not (version< emacs-version "24.4"))
   :ensure t)
 
-;; Company
+;; company
 ;; -------
 (use-package company
   :ensure t
@@ -278,7 +303,7 @@
   :config
   (global-company-mode 1))
 
-;; Yasnippet
+;; yasnippet
 ;; ---------
 (use-package yasnippet
   :ensure t
@@ -289,14 +314,14 @@
   :config
   (yas-global-mode 1))
 
-;; Flycheck
+;; flycheck
 ;; --------
 (use-package flycheck
   :if (not (version< emacs-version "24.3"))
   :ensure t
   :diminish flycheck-mode)
 
-;; Markdown-Mode
+;; markdown-mode
 ;; -------------
 (use-package markdown-mode
   :ensure t
@@ -327,22 +352,31 @@
 (use-package evil
   :ensure t
   :init
-  (setq evil-want-integration nil)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-integration t)
   :config
   (evil-mode 1)
   ;; Use Emacs state in these additional modes.
-  (dolist (mode '(dired-mode eshell-mode))
+  (dolist (mode '(dired-mode eshell-mode grep-mode))
     (add-to-list 'evil-emacs-state-modes mode))
   (delete 'eshell-mode evil-insert-state-modes)
 
-  ;; Make escape quit everything, whenever possible.
-  (define-key evil-normal-state-map [escape] 'keyboard-escape-quit)
+  ;; https://wikemacs.org/wiki/Evil
+  (define-key evil-normal-state-map [escape] 'keyboard-quit)
   (define-key evil-visual-state-map [escape] 'keyboard-quit)
   (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit))
+  (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+  (define-key evil-normal-state-map "\C-y" 'yank)
+  (define-key evil-insert-state-map "\C-y" 'yank)
+  (define-key evil-visual-state-map "\C-y" 'yank)
+  (define-key evil-insert-state-map "\C-e" 'end-of-line)
+  (define-key evil-normal-state-map "\C-w" 'evil-delete)
+  (define-key evil-insert-state-map "\C-w" 'evil-delete)
+  (define-key evil-insert-state-map "\C-r" 'search-backward)
+  (define-key evil-visual-state-map "\C-w" 'evil-delete))
 
 (use-package evil-leader
   :after evil
@@ -353,7 +387,6 @@
     ","   'other-window
     "."   'mode-line-other-buffer
     ":"   'eval-expression
-    "aa"  'align-regexp
     "b"   'ivy-switch-buffer
     "f"   'counsel-find-file
     "k"   'kill-this-buffer
@@ -371,8 +404,7 @@
     "wj"  'windmove-down
     "wk"  'windmove-up
     "wl"  'windmove-right
-    "x"   'counsel-M-x
-    "y"   'yas-expand)
+    "x"   'counsel-M-x)
   (global-evil-leader-mode))
 
 (use-package evil-surround

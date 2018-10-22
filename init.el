@@ -3,7 +3,7 @@
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran516/.emacs.d
 ;;
-;;                     ░░░░░░░░░ 
+;;                     ░░░░░░░░░
 ;;                     ░░░░▄▀▀▀▀▀█▀▄▄▄▄░░░░
 ;;                     ░░▄▀▒▓▒▓▓▒▓▒▒▓▒▓▀▄░░
 ;;                     ▄▀▒▒▓▒▓▒▒▓▒▓▒▓▓▒▒▓█░
@@ -31,17 +31,9 @@
 (unless (assoc-default "melpa" package-archives)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/")))
 
-;; Check for network connectivity
-(defvar my-online-p nil)
-(unless (condition-case ;; [var eval handle-err]
-            nil (delete-process (make-network-process
-                                 :name "my-check-internet"
-                                 :host "elpa.gnu.org"
-                                 :service 80)) (error t)) (setq my-online-p t))
-
-(when my-online-p
-  (package-refresh-contents))
 (package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; Add packages to the load
 (add-to-list 'load-path (concat dot-d-dir "packages"))
@@ -58,9 +50,10 @@
 ;; Compile elisp
 (use-package auto-compile
   :ensure t
+  :init
+  (setq load-prefer-newer t)
   :config
   (auto-compile-on-load-mode))
-(setq load-prefer-newer t)
 
 ;; If the operating system being used is Mac OS X, then meta == command
 (use-package mac-key-mode

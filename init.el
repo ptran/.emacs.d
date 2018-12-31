@@ -1,7 +1,7 @@
 ;; init.el
 ;;
 ;; Author:  Philip Tran
-;; URL:     https://github.com/ptran516/.emacs.d
+;; URL:     https://github.com/ptran/.emacs.d
 ;;
 ;;                     ░░░░░░░░░
 ;;                     ░░░░▄▀▀▀▀▀█▀▄▄▄▄░░░░

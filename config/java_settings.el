@@ -1,7 +1,7 @@
 ;; java_settings.el
 ;;
 ;; Author:  Philip Tran
-;; URL:     https://github.com/ptran516/.emacs.d
+;; URL:     https://github.com/ptran/.emacs.d
 
 ;; Check if configurables exist; if not, set them to default values
 (unless (boundp 'my/eclim-eclipse-dir) (setq my/eclim-eclipse-dir "~/eclipse"))

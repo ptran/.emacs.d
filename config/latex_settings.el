@@ -1,7 +1,7 @@
 ;; latex_settings.el
 ;;
 ;; Author:  Philip Tran
-;; URL:     https://github.com/ptran516/.emacs.d
+;; URL:     https://github.com/ptran/.emacs.d
 
 ;; From http://stackoverflow.com/questions/2199678/how-to-call-latexmk-in-emacs-and-jump-to-next-error
 (setq TeX-latexmk-command

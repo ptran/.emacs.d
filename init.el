@@ -20,11 +20,7 @@
 ;;                     ░░░░░░░░▀▀█▄▄▄▄▀░░░
 
 ;; Set emacs directory
-(defconst dot-d-dir "~/.emacs.d/" ".emacs.d location")
-
-;; Load private settings (if available)
-(defvar private-file (concat dot-d-dir "config/private_settings.el"))
-(if (file-exists-p private-file) (load private-file))
+(defvar my/dot-d-dir (expand-file-name "~/.emacs.d/") ".emacs.d location")
 
 ;; Package management
 (require 'package)
@@ -36,14 +32,13 @@
   (package-refresh-contents))
 
 ;; Add packages to the load
-(add-to-list 'load-path (concat dot-d-dir "packages"))
+(add-to-list 'load-path (concat my/dot-d-dir "packages"))
 
 ;; Setup use-package
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (setq use-package-verbose t)
 (eval-when-compile (require 'use-package))
-(require 'diminish)
 (require 'bind-key)
 (require 'cl)
 
@@ -62,10 +57,10 @@
   (setq mac-command-modifier 'meta))
 
 ;; Load configurations
-(load (concat dot-d-dir "config/global_settings.el"))
-(load (concat dot-d-dir "config/elisp_settings.el"))
-(load (concat dot-d-dir "config/cpp_settings.el"))
-(load (concat dot-d-dir "config/python_settings.el"))
-(load (concat dot-d-dir "config/org_settings.el"))
-(load (concat dot-d-dir "config/latex_settings.el"))
-(load (concat dot-d-dir "config/web_settings.el"))
+(load (concat my/dot-d-dir "config/global_settings.el"))
+(load (concat my/dot-d-dir "config/elisp_settings.el"))
+(load (concat my/dot-d-dir "config/cpp_settings.el"))
+(load (concat my/dot-d-dir "config/python_settings.el"))
+(load (concat my/dot-d-dir "config/org_settings.el"))
+(load (concat my/dot-d-dir "config/latex_settings.el"))
+(load (concat my/dot-d-dir "config/web_settings.el"))

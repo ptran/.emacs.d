@@ -3,13 +3,12 @@
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran/.emacs.d
 
-;; Check if configurables exist; if not, set them to default values
-(unless (boundp 'emacs-backup-dir)
-  (defconst emacs-backup-dir "/tmp" "Directory for backup files"))
-(unless (boundp 'emacs-auto-save-dir)
-  (defconst emacs-auto-save-dir "/tmp" "Directory for auto-save files"))
-(unless (boundp 'my/markdown-command)
-  (defconst my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation"))
+;;
+(defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
+(defvar my/emacs-auto-save-dir (concat my/dot-d-dir "auto-save") "Directory for auto-save files")
+(setq my/font-type "Source Code Pro:antialiasing=True:hinting=True")
+(setq my/font-size 100)
+(defvar my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation")
 ;;
 
 ;; Stop that noob shit at startup
@@ -21,10 +20,10 @@
 (blink-cursor-mode -1)
 
 ;; Keep backup(~) files in specified folder
-(setq backup-directory-alist `((".*" . ,emacs-backup-dir)))
+(setq backup-directory-alist `((".*" . ,my/emacs-backup-dir)))
 
 ;; Set auto-save directory
-(setq auto-save-file-name-transforms `((".*" ,emacs-auto-save-dir t)))
+(setq auto-save-file-name-transforms `((".*" ,my/emacs-auto-save-dir t)))
 
 ;; Stop making sounds
 (setq ring-bell-function 'ignore)
@@ -36,26 +35,25 @@
 (setq x-select-enable-clipboard t)
 
 ;; Check if the font exists and set it
-(defvar my/font-type "Source Code Pro:antialiasing=True:hinting=True")
-(defun font-exists-p (font) "check if font exists"
-       (if (null (x-list-fonts font))
-           nil
-         t))
+(defun font-exists-p (font)
+  "Check if font exists"
+  (if (null (x-list-fonts font))
+      nil
+    t))
 
 ;; Set font for stand-alone GUI emacs
 (if (display-graphic-p)
     (if (font-exists-p my/font-type)
         (set-face-attribute 'default nil :font my/font-type)))
-
-(unless (boundp 'my/font-size)
-  (setq my/font-size 100))  ; check if my/font-size is defined; if not, set it to 100
 (set-face-attribute 'default nil :height my/font-size)
 
 ;; Set font for generated frames (daemon)
-(defun my/set-frame-font (frame) "sets frame font if font exists"
+(defun my/set-frame-font (frame)
+  "Sets frame font if font exists"
        (select-frame frame)
        (if (font-exists-p my/font-type)
            (set-frame-font my/font-type)))
+
 (if (daemonp)
     (add-hook 'after-make-frame-functions #'my/set-frame-font))
 
@@ -142,7 +140,7 @@
 (setq org-src-tab-acts-natively t)
 
 ;; Store the custom settings in a separate file
-(setq custom-file (concat dot-d-dir "custom.el"))
+(setq custom-file (concat my/dot-d-dir "custom.el"))
 (load custom-file 'noerror)
 
 ;; ===========================================================================
@@ -154,7 +152,7 @@
        '(("\\.cu\\'" . cuda-mode))
        '(("\\.cuh\\'" . cuda-mode))
        auto-mode-alist))
-(autoload 'cuda-mode (concat dot-d-dir "packages/cuda-mode.el"))
+(autoload 'cuda-mode (concat my/dot-d-dir "packages/cuda-mode.el"))
 
 ;; ===========================================================================
 ;;                              CMAKE MODE
@@ -165,7 +163,7 @@
        '(("CMakeLists\\.txt\\'" . cmake-mode))
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
-(autoload 'cmake-mode (concat dot-d-dir "packages/cmake-mode.el"))
+(autoload 'cmake-mode (concat my/dot-d-dir "packages/cmake-mode.el"))
 
 ;; ===========================================================================
 ;;                          PACKAGE SPECIFICS
@@ -309,7 +307,7 @@
   :ensure t
   :diminish yasnippet-mode
   :init
-  (setq my/yas-snippet-dir (concat dot-d-dir "snippets"))
+  (setq my/yas-snippet-dir (concat my/dot-d-dir "snippets"))
   (setq yas-snippet-dirs '(my/yas-snippet-dir))
   :config
   (yas-global-mode 1))
@@ -359,6 +357,8 @@
   ;; Use Emacs state in these additional modes.
   (dolist (mode '(dired-mode eshell-mode grep-mode))
     (add-to-list 'evil-emacs-state-modes mode))
+
+  ;; Remove Insert mode from eshell
   (delete 'eshell-mode evil-insert-state-modes)
 
   ;; https://wikemacs.org/wiki/Evil
@@ -369,14 +369,17 @@
   (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-  (define-key evil-normal-state-map "\C-y" 'yank)
-  (define-key evil-insert-state-map "\C-y" 'yank)
-  (define-key evil-visual-state-map "\C-y" 'yank)
-  (define-key evil-insert-state-map "\C-e" 'end-of-line)
+  ;; Normal
   (define-key evil-normal-state-map "\C-w" 'evil-delete)
+  (define-key evil-normal-state-map "\C-y" 'yank)
+  ;; Insert
+  (define-key evil-insert-state-map "\C-y" 'yank)
+  (define-key evil-insert-state-map "\C-e" 'end-of-line)
   (define-key evil-insert-state-map "\C-w" 'evil-delete)
   (define-key evil-insert-state-map "\C-r" 'search-backward)
-  (define-key evil-visual-state-map "\C-w" 'evil-delete))
+  ;; Visual
+  (define-key evil-visual-state-map "\C-w" 'evil-delete)
+  (define-key evil-visual-state-map "\C-y" 'yank))
 
 (use-package evil-leader
   :after evil
@@ -400,10 +403,10 @@
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
     "s"   'swiper
-    "wh"  'windmove-left ;; switching through windows
-    "wj"  'windmove-down
-    "wk"  'windmove-up
-    "wl"  'windmove-right
+    "wa"  'windmove-left ;; switching through windows
+    "ws"  'windmove-down
+    "ww"  'windmove-up
+    "wd"  'windmove-right
     "x"   'counsel-M-x)
   (global-evil-leader-mode))
 

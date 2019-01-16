@@ -8,6 +8,7 @@
       c-basic-offset 4)
 
 (defun my/c-indent-hook ()
+  "My indentation preferences for c-mode-common"
   (c-set-offset 'arglist-intro '+)
   (c-set-offset 'arglist-close '0)
   (c-set-offset 'inline-open '0))

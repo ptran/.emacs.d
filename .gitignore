@@ -6,11 +6,15 @@ irony
 request
 url
 
+auto-save/*
+backup/*
+!auto-save/.keep
+!backup/.keep
+
 recentf
 projectile*
 semanticdb
 session*
 *.dat
 
-private_settings.el
 custom.el

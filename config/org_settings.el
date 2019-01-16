@@ -4,8 +4,8 @@
 ;; URL:     https://github.com/ptran/.emacs.d
 
 ;;
-(defvar my/org-task-file "/home/ptran/Dropbox/Documents/Org/todo.org" "Org file for keeping track of tasks")
-(defvar my/org-notes-file "/home/ptran/Dropbox/Documents/Org/notes.org" "Org file for taking notes")
+(defvar my/org-task-file "/home/ptran/Notes/todo.org" "Org file for keeping track of tasks")
+(defvar my/org-notes-file "/home/ptran/Notes/notes.org" "Org file for taking notes")
 ;;
 
 (use-package org

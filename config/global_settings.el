@@ -22,7 +22,9 @@
 ;; Keep backup(~) files in specified folder
 (setq backup-directory-alist `((".*" . ,my/emacs-backup-dir)))
 
-;; Set auto-save directory
+;; Set auto-save directory (make sure my/emacs-auto-save-dir ends with "/")
+(unless (string-equal (substring my/emacs-auto-save-dir -1 nil) "/")
+  (setq my/emacs-auto-save-dir (concat my/emacs-auto-save-dir "/")))
 (setq auto-save-file-name-transforms `((".*" ,my/emacs-auto-save-dir t)))
 
 ;; Stop making sounds

@@ -21,6 +21,4 @@
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
-
-  (setq web-mode-engines-alist
-        '(("jinja" . "\\.html?\\'"))))
+  (setq web-mode-engines-alist '(("jinja" . "\\.html?\\'"))))

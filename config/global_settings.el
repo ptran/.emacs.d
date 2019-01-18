@@ -59,23 +59,6 @@
 (if (daemonp)
     (add-hook 'after-make-frame-functions #'my/set-frame-font))
 
-;; Set default frame size
-(if (display-graphic-p)
-    (progn
-      (setq initial-frame-alist '((tool-bar-lines . 0)
-                                  (width . 140)
-                                  (height . 60)
-                                  (left . 40)
-                                  (top . 40)))
-      (setq default-frame-alist '((tool-bar-lines . 0)
-                                  (width . 140)
-                                  (height . 60)
-                                  (left . 40)
-                                  (top . 40))))
-  (progn
-    (setq initial-frame-alist '((tool-bar-lines . 0)))
-    (setq default-frame-alist '((tool-bar-lines . 0)))))
-
 ;; UTF-8 encoding
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -206,7 +189,9 @@
   (setq-default fill-column 120)
   (setq-default fci-rule-color "gray")
   (setq-default fci-rule-width 2)
-  (add-hook 'prog-mode-hook #'fci-mode))
+  (add-hook 'c-mode-hook #'fci-mode)
+  (add-hook 'c++-mode-hook #'fci-mode)
+  (add-hook 'python-mode-hook #'fci-mode))
 
 ;; whitespace
 ;; ----------

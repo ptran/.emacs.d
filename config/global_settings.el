@@ -310,6 +310,25 @@
       (browse-url url)))
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 
+;; counsel-etags
+;; ---------------------------------------------------------------------------
+(use-package counsel-etags
+  :if (executable-find "ctags")
+  :ensure t
+  :config
+  (add-to-list 'counsel-etags-ignore-directories "build")
+  (add-to-list 'counsel-etags-ignore-directories ".git")
+  (add-to-list 'counsel-etags-ignore-filenames "*.elc")
+  (add-to-list 'counsel-etags-ignore-filenames "*.json")
+  (add-to-list 'counsel-etags-ignore-filenames "*.md")
+  (add-to-list 'counsel-etags-ignore-filenames "*.pyc")
+  (add-to-list 'counsel-etags-ignore-filenames "*.txt")
+  (add-to-list 'counsel-etags-ignore-filenames "*.xml")
+  (add-to-list 'counsel-etags-ignore-filenames "TAGS")
+  ;; Setup auto update as described in http://blog.binchen.org
+  (add-hook 'prog-mode-hook (lambda () (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
+  (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags))
+
 ;; evil
 ;; ----
 (use-package evil
@@ -335,9 +354,14 @@
   (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
   ;; Normal
+  (define-key evil-normal-state-map (kbd "C-c p p") 'projectile-switch-project)
+  (define-key evil-normal-state-map (kbd "C-c p f") 'projectile-find-file)
+  (define-key evil-normal-state-map "\M-." 'counsel-etags-find-tag-at-point)
   (define-key evil-normal-state-map "\C-w" 'evil-delete)
   (define-key evil-normal-state-map "\C-y" 'yank)
   ;; Insert
+  (define-key evil-insert-state-map (kbd "C-c p p") 'projectile-switch-project)
+  (define-key evil-insert-state-map (kbd "C-c p f") 'projectile-find-file)
   (define-key evil-insert-state-map "\C-y" 'yank)
   (define-key evil-insert-state-map "\C-e" 'end-of-line)
   (define-key evil-insert-state-map "\C-w" 'evil-delete)
@@ -365,6 +389,7 @@
     "pp"  'projectile-switch-project
     "pb"  'projectile-switch-to-buffer
     "pf"  'projectile-find-file
+    "pj"  'projectile-find-tag
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
     "s"   'swiper

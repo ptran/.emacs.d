@@ -44,15 +44,6 @@
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-;; ob-ipython
-;; ---------------------------------------------------------------------------
-(use-package ob-ipython
-  :if (executable-find "ipython")
-  :ensure t
-  :config
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((ipython . t))))
-
 ;; Emacs Ipython Notebook (EIN)
 ;; ---------------------------------------------------------------------------
 (use-package ein

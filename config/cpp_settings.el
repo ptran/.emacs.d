@@ -31,7 +31,10 @@
   "Build CMake project for current buffer"
   (interactive)
   (if (buffer-file-name)
-      (setq buffer-project-root (projectile-project-root buffer-file-name))
+      (progn
+        (if (file-remote-p (buffer-file-name))
+          (error "my/build-cmake-project error: Cannot build using a remote file"))
+        (setq buffer-project-root (projectile-project-root buffer-file-name)))
     (error "my/build-cmake-project error: Current buffer is not a file"))
   (setq cmakelists-file (concat buffer-project-root "CMakeLists.txt"))
   (unless (file-exists-p cmakelists-file)
@@ -47,6 +50,30 @@
 
 ;; Bind build function to C-c m
 (add-hook 'c++-mode-hook (lambda () (define-key c++-mode-map (kbd "C-c m") #'my/build-cmake-project)))
+
+;; CMake Mode
+;; ---------------------------------------------------------------------------
+(use-package cmake-mode
+  :ensure t
+  :config
+  (setq auto-mode-alist
+        (append
+         '(("CMakeLists\\.txt\\'" . cmake-mode))
+         '(("\\.cmake\\'" . cmake-mode))
+         auto-mode-alist))
+  (autoload 'cmake-mode (concat my/dot-d-dir "packages/cmake-mode.el")))
+
+;; CUDA Mode
+;; ---------------------------------------------------------------------------
+(use-package cuda-mode
+  :ensure t
+  :config
+  (setq auto-mode-alist
+        (append
+         '(("\\.cu\\'" . cuda-mode))
+         '(("\\.cuh\\'" . cuda-mode))
+         auto-mode-alist))
+  (autoload 'cuda-mode (concat my/dot-d-dir "packages/cuda-mode.el")))
 
 ;; Irony-Mode
 ;; ---------------------------------------------------------------------------

@@ -146,28 +146,6 @@
 (load custom-file 'noerror)
 
 ;; ===========================================================================
-;;                              CUDA MODE
-;; ===========================================================================
-;; Add cuda to the mode list.
-(setq auto-mode-alist
-      (append
-       '(("\\.cu\\'" . cuda-mode))
-       '(("\\.cuh\\'" . cuda-mode))
-       auto-mode-alist))
-(autoload 'cuda-mode (concat my/dot-d-dir "packages/cuda-mode.el"))
-
-;; ===========================================================================
-;;                              CMAKE MODE
-;; ===========================================================================
-;; Add cmake to the mode list.
-(setq auto-mode-alist
-      (append
-       '(("CMakeLists\\.txt\\'" . cmake-mode))
-       '(("\\.cmake\\'" . cmake-mode))
-       auto-mode-alist))
-(autoload 'cmake-mode (concat my/dot-d-dir "packages/cmake-mode.el"))
-
-;; ===========================================================================
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes

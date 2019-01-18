@@ -34,12 +34,12 @@
              "Task"
              entry
              (file+headline my/org-task-file "Tasks")
-             "* TODO %?\nCAPTURED: %<%Y-%m-%d %H:%M>")
+             "* TODO %^{Task} %^g\nCAPTURED: %<%Y-%m-%d %H:%M>")
             ("T"
              "Detailed Task"
              entry
              (file+headline my/org-task-file "Tasks")
-             "* TODO %^{Task}\nCAPTURED: %<%Y-%m-%d %H:%M>\n%?\n"))))
+             "* TODO %^{Task} %^g\nCAPTURED: %<%Y-%m-%d %H:%M>\n%?\n"))))
 
 ;; Make org file bullets look nice
 (use-package org-bullets

@@ -3,28 +3,25 @@
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran/.emacs.d
 
-;; Indentation preferences
-(setq c-default-style "stroustrup"
-      c-basic-offset 4)
-
-(defun my/c-indent-hook ()
-  "My indentation preferences for c-mode-common"
-  (c-set-offset 'arglist-intro '+)
-  (c-set-offset 'arglist-close '0)
-  (c-set-offset 'inline-open '0))
-(add-hook 'c-mode-hook #'my/c-indent-hook)
-(add-hook 'c++-mode-hook #'my/c-indent-hook)
-
-;; Display line numbers
-(add-hook 'c-mode-hook #'linum-mode)
-(add-hook 'c++-mode-hook #'linum-mode)
-
-;; Open .h files in c++ mode
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
-(if (buffer-file-name)
-    (file-name-directory buffer-file-name)
-  (print "Current buffer is not a file"))
+(use-package cc-mode
+  :preface
+  (defun my/c-mode-hook ()
+    "C and C++ coding style preferences"
+    (setq c-basic-offset 2)
+    (setq c-default-style "bsd")
+    (c-set-offset 'arglist-intro '+)
+    (c-set-offset 'arglist-close 0)
+    (c-set-offset 'arglist-cont-nonempty 0)
+    (c-set-offset 'inlambda 0)
+    (c-set-offset 'substatement-open 0))
+  :config
+  (add-hook 'c-mode-hook #'my/c-mode-hook)
+  (add-hook 'c++-mode-hook #'my/c-mode-hook)
+  ;; Display line numbers
+  (add-hook 'c-mode-hook #'linum-mode)
+  (add-hook 'c++-mode-hook #'linum-mode)
+  ;; Open .h files in c++ mode
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
 ;; Custom cmake build function (requires projectile)
 (defun my/build-cmake-project (&optional cmake-args)

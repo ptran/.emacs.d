@@ -7,8 +7,8 @@
 (defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
 (defvar my/emacs-auto-save-dir (concat my/dot-d-dir "auto-save") "Directory for auto-save files")
 (setq my/font-type "Source Code Pro:antialiasing=True:hinting=True")
-(setq my/font-size 100)
-(defvar my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation")
+(setq my/font-size 90)
+(defvar my/markdown-command "~/scoop/apps/pandoc/current/pandoc.exe" "Program used for markdown generation")
 ;;
 
 ;; Stop that noob shit at startup

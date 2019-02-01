@@ -315,6 +315,9 @@
 (use-package counsel-etags
   :if (executable-find "ctags")
   :ensure t
+  :init
+  ;; Stop asking about re-reading TAGS files
+  (setq tags-revert-without-query t)
   :config
   (add-to-list 'counsel-etags-ignore-directories "build")
   (add-to-list 'counsel-etags-ignore-directories ".git")

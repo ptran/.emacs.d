@@ -11,7 +11,6 @@
     (setq c-default-style "bsd")
     (c-set-offset 'arglist-intro '+)
     (c-set-offset 'arglist-close 0)
-    (c-set-offset 'arglist-cont-nonempty 0)
     (c-set-offset 'inlambda 0)
     (c-set-offset 'substatement-open 0))
   :config

@@ -1,8 +1,8 @@
-# ptran's Emacs Configuration
+# Emacs Config
 
-This is my personal Emacs configuration. The structure is fairly straightforward. There is a top-level `init.el` that loads in different settings from the `config` directory.
+Personal Emacs configuration with fairly straightforward structuring. `init.el` loads in settings from the `config` directory. Aside from `global_settings.el`, each settings file is modularized by either programming language development or major mode.
 
-Despite the many packages that I include in my configuration, there are only a few that are essential to my overall workflow.
+Despite the various packages used, the following are essential for daily software development:
 
 - [use-package](https://github.com/jwiegley/use-package) - manage all the packages
 - [ivy](https://github.com/abo-abo/swiper) - fast completion front-end

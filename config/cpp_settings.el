@@ -22,9 +22,9 @@
   ;; Open .h files in c++ mode
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
-;; Custom cmake build function (requires projectile)
+;; my/build-cmake-project
 (defun my/build-cmake-project (&optional cmake-args)
-  "Build CMake project for current buffer"
+  "Build CMake project for current buffer, expects project to be in a git repository"
   (interactive)
   (if (buffer-file-name)
       (progn
@@ -32,12 +32,15 @@
           (error "my/build-cmake-project error: Cannot build using a remote file"))
         (setq buffer-project-root (projectile-project-root buffer-file-name)))
     (error "my/build-cmake-project error: Current buffer is not a file"))
+  ;; Find CMakeLists.txt at the top level directory
   (setq cmakelists-file (concat buffer-project-root "CMakeLists.txt"))
   (unless (file-exists-p cmakelists-file)
     (error "my/build-cmake-project error: %s" (concat buffer-project-root " does not have a CMakeLists.txt file")))
+  ;; Make a build directory at project's top level directory
   (setq build-directory (concat buffer-project-root "build"))
   (unless (file-exists-p build-directory)
     (make-directory build-directory))
+  ;; Execute cmake and build project
   (setq cmake-command (concat "cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON " cmake-args))
   (if (string-equal system-type "windows-nt")
       (setq build-command "cmake --build . --config Release")
@@ -57,7 +60,7 @@
          '(("CMakeLists\\.txt\\'" . cmake-mode))
          '(("\\.cmake\\'" . cmake-mode))
          auto-mode-alist))
-  (autoload 'cmake-mode (concat my/dot-d-dir "packages/cmake-mode.el")))
+  (add-hook 'cmake-mode-hook (lambda () (define-key cmake-mode-map (kbd "C-c m") #'my/build-cmake-project))))
 
 ;; CUDA Mode
 ;; ---------------------------------------------------------------------------
@@ -68,8 +71,7 @@
         (append
          '(("\\.cu\\'" . cuda-mode))
          '(("\\.cuh\\'" . cuda-mode))
-         auto-mode-alist))
-  (autoload 'cuda-mode (concat my/dot-d-dir "packages/cuda-mode.el")))
+         auto-mode-alist)))
 
 ;; Irony-Mode
 ;; ---------------------------------------------------------------------------

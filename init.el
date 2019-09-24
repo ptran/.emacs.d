@@ -2,22 +2,6 @@
 ;;
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran/.emacs.d
-;;
-;;                     ░░░░░░░░░
-;;                     ░░░░▄▀▀▀▀▀█▀▄▄▄▄░░░░
-;;                     ░░▄▀▒▓▒▓▓▒▓▒▒▓▒▓▀▄░░
-;;                     ▄▀▒▒▓▒▓▒▒▓▒▓▒▓▓▒▒▓█░
-;;                     █▓▒▓▒▓▒▓▓▓░░░░░░▓▓█░
-;;                     █▓▓▓▓▓▒▓▒░░░░░░░░▓█░
-;;                     ▓▓▓▓▓▒░░░░░░░░░░░░█░
-;;                     ▓▓▓▓░░░░▄▄▄▄░░░▄█▄▀░
-;;                     ░▀▄▓░░▒▀▓▓▒▒░░█▓▒▒░░
-;;                     ▀▄░░░░░░░░░░░░▀▄▒▒█░
-;;                     ░▀░▀░░░░░▒▒▀▄▄▒▀▒▒█░
-;;                     ░░▀░░░░░░▒▄▄▒▄▄▄▒▒█░
-;;                     ░░░▀▄▄▒▒░░░░▀▀▒▒▄▀░░
-;;                     ░░░░░▀█▄▒▒░░░░▒▄▀░░░
-;;                     ░░░░░░░░▀▀█▄▄▄▄▀░░░
 
 ;; Set emacs directory
 (defvar my/dot-d-dir (expand-file-name "~/.emacs.d/") ".emacs.d location")
@@ -49,12 +33,6 @@
   (setq load-prefer-newer t)
   :config
   (auto-compile-on-load-mode))
-
-;; If the operating system being used is Mac OS X, then meta == command
-(use-package mac-key-mode
-  :if (eq system-type 'darwin)
-  :config
-  (setq mac-command-modifier 'meta))
 
 ;; Load configurations
 (load (concat my/dot-d-dir "config/global_settings.el"))

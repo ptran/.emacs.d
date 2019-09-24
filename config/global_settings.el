@@ -311,7 +311,7 @@
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 
 ;; counsel-etags
-;; ---------------------------------------------------------------------------
+;; -------------
 (use-package counsel-etags
   :if (executable-find "ctags")
   :ensure t
@@ -422,3 +422,10 @@
 (use-package evil-magit
   :after evil magit
   :ensure t)
+
+;; mac-key-mode
+;; ------------
+(use-package mac-key-mode
+  :if (eq system-type 'darwin)
+  :config
+  (setq mac-command-modifier 'meta))

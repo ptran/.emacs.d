@@ -135,7 +135,7 @@
 (use-package kaolin-themes
   :ensure t
   :config
-  (load-theme 'kaolin-aurora t))
+  (load-theme 'kaolin-temple t))
 
 ;; highlight-parentheses
 ;; ---------------------
@@ -277,6 +277,10 @@
   :config
   (yas-global-mode 1))
 
+(use-package ivy-yasnippet
+  :after yasnippet
+  :ensure t)
+
 ;; flycheck
 ;; --------
 (use-package flycheck
@@ -310,28 +314,6 @@
       (browse-url url)))
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 
-;; counsel-etags
-;; -------------
-(use-package counsel-etags
-  :if (executable-find "ctags")
-  :ensure t
-  :init
-  ;; Stop asking about re-reading TAGS files
-  (setq tags-revert-without-query t)
-  :config
-  (add-to-list 'counsel-etags-ignore-directories "build")
-  (add-to-list 'counsel-etags-ignore-directories ".git")
-  (add-to-list 'counsel-etags-ignore-filenames "*.elc")
-  (add-to-list 'counsel-etags-ignore-filenames "*.json")
-  (add-to-list 'counsel-etags-ignore-filenames "*.md")
-  (add-to-list 'counsel-etags-ignore-filenames "*.pyc")
-  (add-to-list 'counsel-etags-ignore-filenames "*.txt")
-  (add-to-list 'counsel-etags-ignore-filenames "*.xml")
-  (add-to-list 'counsel-etags-ignore-filenames "TAGS")
-  ;; Setup auto update as described in http://blog.binchen.org
-  (add-hook 'prog-mode-hook (lambda () (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
-  (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags))
-
 ;; evil
 ;; ----
 (use-package evil
@@ -359,9 +341,12 @@
   ;; Normal
   (define-key evil-normal-state-map (kbd "C-c p p") 'projectile-switch-project)
   (define-key evil-normal-state-map (kbd "C-c p f") 'projectile-find-file)
-  (define-key evil-normal-state-map "\M-." 'counsel-etags-find-tag-at-point)
   (define-key evil-normal-state-map "\C-w" 'evil-delete)
   (define-key evil-normal-state-map "\C-y" 'yank)
+  (define-key evil-normal-state-map (kbd "\C-c w w") 'windmove-up)
+  (define-key evil-normal-state-map (kbd "\C-c w a") 'windmove-left)
+  (define-key evil-normal-state-map (kbd "\C-c w s") 'windmove-down)
+  (define-key evil-normal-state-map (kbd "\C-c w d") 'windmove-right)
   ;; Insert
   (define-key evil-insert-state-map (kbd "C-c p p") 'projectile-switch-project)
   (define-key evil-insert-state-map (kbd "C-c p f") 'projectile-find-file)
@@ -369,6 +354,7 @@
   (define-key evil-insert-state-map "\C-e" 'end-of-line)
   (define-key evil-insert-state-map "\C-w" 'evil-delete)
   (define-key evil-insert-state-map "\C-r" 'search-backward)
+  (define-key evil-insert-state-map (kbd "\C-x y") 'ivy-yasnippet)
   ;; Visual
   (define-key evil-visual-state-map "\C-w" 'evil-delete)
   (define-key evil-visual-state-map "\C-y" 'yank))
@@ -396,11 +382,12 @@
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
     "s"   'swiper
-    "wa"  'windmove-left ;; switching through windows
+    "wa"  'windmove-left ; switching through windows
     "ws"  'windmove-down
     "ww"  'windmove-up
     "wd"  'windmove-right
-    "x"   'counsel-M-x)
+    "x"   'counsel-M-x
+    "y"   'ivy-yasnippet)
   (global-evil-leader-mode))
 
 (use-package evil-surround

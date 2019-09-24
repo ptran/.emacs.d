@@ -1,0 +1,6 @@
+# key: forcauto
+# name: for const auto 
+# --
+for (${1:const} auto${2:&} ${3:item} : ${4:vec}) {
+    $0
+}

@@ -2,5 +2,5 @@
 # name: for i increment loop
 # --
 for (${1:std::size_t }${2:i} = 0; $2 < ${3:vec}.size(); ++$2) {
-    $0
+  $0
 }

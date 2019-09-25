@@ -1,0 +1,12 @@
+# key: ajaxpost
+# name: Ajax POST request
+# --
+$.ajax({
+  url: ${1:/api/here},
+  type: "POST",
+  contentType: ${2:"application/json"}
+  data: ${3:{}}
+  dataType: ${3:"json"}
+}).done(function(response) {
+  $0
+});

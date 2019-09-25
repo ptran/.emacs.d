@@ -1,0 +1,14 @@
+# key: jscls
+# name: Javascript ES6 class
+# --
+/**
+ * ${1:Class description}
+ */
+class ${2:Name} {
+  /**
+   * ${3:Constructor description}
+   */
+  constructor(${4:parameters}) {
+    $0 
+  }
+}

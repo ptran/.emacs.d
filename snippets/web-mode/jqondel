@@ -1,0 +1,6 @@
+# key: jqondel
+# name: jQuery delegated on event handler
+# --
+$(${1:selector}).on("${2:action}", ${3:selector}, function(e) {
+  $0
+});

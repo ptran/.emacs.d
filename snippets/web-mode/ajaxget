@@ -1,0 +1,9 @@
+# key: ajaxget
+# name: Ajax GET request
+# --
+$.ajax({
+  url: ${1:/api/here},
+  type: "GET"
+}).done(function(response) {
+  $0
+});

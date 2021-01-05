@@ -132,10 +132,10 @@
 ;;                          PACKAGE SPECIFICS
 ;; ===========================================================================
 ;; Emacs themes
-(use-package kaolin-themes
+(use-package doom-themes
   :ensure t
   :config
-  (load-theme 'kaolin-temple t))
+  (load-theme 'doom-spacegrey t))
 
 ;; highlight-parentheses
 ;; ---------------------

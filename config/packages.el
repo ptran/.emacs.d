@@ -53,6 +53,7 @@
     "b"   'ivy-switch-buffer
     "a"   'counsel-projectile-find-file
     "f"   'counsel-find-file
+    "g"   'gptel              ; "g" for gptel / Gemini
     "k"   'kill-this-buffer
     "l"   'whitespace-mode
     "L"   'delete-trailing-whitespace
@@ -156,5 +157,14 @@
           try-expand-dabbrev
           try-expand-dabbrev-all-buffers
           try-expand-dabbrev-from-kill)))
+
+;; AI Integration
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-model 'gemini-pro
+        gptel-backend (gptel-make-gemini "Gemini"
+                                         :key (getenv "GEMINI_API_KEY")
+                                         :stream t)))
 
 (provide 'packages)

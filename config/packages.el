@@ -158,13 +158,25 @@
           try-expand-dabbrev-all-buffers
           try-expand-dabbrev-from-kill)))
 
+;; macOS Shell Environment (Crucial for API keys)
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
 ;; AI Integration
 (use-package gptel
   :ensure t
   :config
-  (setq gptel-model 'gemini-pro
-        gptel-backend (gptel-make-gemini "Gemini"
+  (setq gptel-model 'gemini-3.1-flash) ; Use the latest fast model
+  (setq gptel-backend (gptel-make-gemini "Gemini"
                                          :key (getenv "GEMINI_API_KEY")
-                                         :stream t)))
+                                         :stream t))
+  ;; Safeguards
+  (setq-default gptel-max-tokens 2048) ; A bit more generous for 3.1
+  (setq gptel-directives
+        '((default . "You are a concise assistant. Provide short, direct answers. Avoid conversational filler.")
+          (programmer . "You are an expert programmer. Provide code snippets and brief explanations. Use modern best practices."))))
 
 (provide 'packages)

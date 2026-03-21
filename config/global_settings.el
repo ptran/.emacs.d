@@ -7,7 +7,7 @@
 (defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
 (defvar my/emacs-auto-save-dir (concat my/dot-d-dir "auto-save") "Directory for auto-save files")
 (setq my/font-type "Source Code Pro:antialiasing=True:hinting=True")
-(setq my/font-size 100)
+(setq my/font-size 130)
 (defvar my/markdown-command "/usr/bin/pandoc" "Program used for markdown generation")
 ;;
 
@@ -216,6 +216,8 @@
   :bind
   (("C-x u" . undo-tree-visualize))
   :diminish undo-tree-mode
+  :init
+  (setq undo-tree-history-directory-alist `(("." . ,my/emacs-auto-save-dir)))
   :config
   (global-undo-tree-mode 1))
 
@@ -258,6 +260,13 @@
 (use-package magit
   :if (not (version< emacs-version "24.4"))
   :ensure t)
+
+(use-package diff-hl
+  :after magit
+  :ensure t
+  :config
+  (global-diff-hl-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 ;; company
 ;; -------
@@ -328,6 +337,7 @@
   :init
   (setq evil-want-keybinding nil)
   (setq evil-want-integration t)
+  (setq evil-undo-system 'undo-tree) ; Use undo-tree for C-r (redo)
   :config
   (evil-mode 1)
   ;; Use Emacs state in these additional modes.
@@ -352,10 +362,6 @@
   (define-key evil-normal-state-map (kbd "C-c p f") 'projectile-find-file)
   (define-key evil-normal-state-map "\C-w" 'evil-delete)
   (define-key evil-normal-state-map "\C-y" 'yank)
-  (define-key evil-normal-state-map (kbd "\C-c w w") 'windmove-up)
-  (define-key evil-normal-state-map (kbd "\C-c w a") 'windmove-left)
-  (define-key evil-normal-state-map (kbd "\C-c w s") 'windmove-down)
-  (define-key evil-normal-state-map (kbd "\C-c w d") 'windmove-right)
   ;; Insert
   (define-key evil-insert-state-map (kbd "C-c p p") 'projectile-switch-project)
   (define-key evil-insert-state-map (kbd "C-c p f") 'projectile-find-file)
@@ -374,16 +380,15 @@
   :config
   (evil-leader/set-leader ",")
   (evil-leader/set-key
-    ","   'other-window
     "."   'mode-line-other-buffer
     ":"   'eval-expression
     "b"   'ivy-switch-buffer
+    "a"   'counsel-projectile-find-file ; "a" for all files in project
     "f"   'counsel-find-file
     "k"   'kill-this-buffer
     "l"   'whitespace-mode
     "L"   'delete-trailing-whitespace
     "m"   'magit-status
-    "o"   'delete-other-windows
     "pp"  'projectile-switch-project
     "pb"  'projectile-switch-to-buffer
     "pf"  'projectile-find-file
@@ -391,10 +396,16 @@
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
     "s"   'swiper
-    "wa"  'windmove-left ; switching through windows
-    "ws"  'windmove-down
-    "ww"  'windmove-up
-    "wd"  'windmove-right
+    "t"   'eshell             ; "t" for terminal
+    "wd"  'delete-window      ; "d" for delete
+    "wm"  'delete-other-windows ; "m" for maximize
+    "ws"  'split-window-below ; "s" for split
+    "wv"  'split-window-right ; "v" for vertical
+    "wh"  'windmove-left
+    "wj"  'windmove-down
+    "wk"  'windmove-up
+    "wl"  'windmove-right
+    "ww"  'other-window  ; "other window" cycle
     "x"   'counsel-M-x
     "y"   'ivy-yasnippet)
   (global-evil-leader-mode))

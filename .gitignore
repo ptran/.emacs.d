@@ -20,3 +20,4 @@ session*
 *.dat
 
 custom.el
+\n*.undo-tree~

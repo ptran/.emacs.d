@@ -7,6 +7,8 @@
   "My hook for emacs-lisp-model"
   ;; Use spaces, not tabs.
   (setq indent-tabs-mode nil)
+  ;; Display line numbers
+  (display-line-numbers-mode 1)
   ;; Pretty-print eval'd expressions.
   (define-key emacs-lisp-mode-map (kbd "C-x C-e") 'pp-eval-last-sexp))
 

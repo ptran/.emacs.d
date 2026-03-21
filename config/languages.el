@@ -11,11 +11,23 @@
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
   (add-hook 'emacs-lisp-mode-hook #'my/emacs-lisp-mode-hook))
 
+;; LSP Support (Eglot)
+(use-package eglot
+  :ensure t
+  :bind (:map eglot-mode-map
+              ("C-c r" . eglot-rename)
+              ("C-c f" . eglot-format))
+  :config
+  (add-to-list 'eglot-server-programs
+               `((c++-mode c-mode) . ("/opt/homebrew/opt/llvm/bin/clangd" "--header-insertion=never"))))
+
 ;; C / C++ / CUDA
 (use-package cc-mode
   :mode (("\\.h\\'" . c++-mode)
          ("\\.cu\\'" . cuda-mode)
          ("\\.cuh\\'" . cuda-mode))
+  :hook ((c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure))
   :preface
   (defun my/c-mode-hook ()
     (setq c-basic-offset 2)
@@ -53,30 +65,11 @@
 
 (use-package cuda-mode :ensure t)
 
-;; C++ Intelligence (Irony)
-(use-package irony
-  :ensure t
-  :hook ((c-mode . irony-mode)
-         (c++-mode . irony-mode)
-         (irony-mode . irony-cdb-autosetup-compile-options))
-  :config
-  (define-key irony-mode-map [remap completion-at-point] 'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol] 'irony-completion-at-point-async))
-
-(use-package company-irony
-  :ensure t
-  :after (company irony)
-  :config (add-to-list 'company-backends 'company-irony))
-
-(use-package company-irony-c-headers
-  :ensure t
-  :after company-irony
-  :config (add-to-list 'company-backends 'company-irony-c-headers))
-
 ;; Python
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
+  :hook (python-mode . eglot-ensure)
   :init
   (setq python-indent-offset 4)
   (if (executable-find "ipython")
@@ -86,16 +79,6 @@
           python-shell-interpreter-args "-i"))
   :config
   (add-hook 'python-mode-hook #'display-line-numbers-mode))
-
-(use-package anaconda-mode
-  :ensure t
-  :hook ((python-mode . anaconda-mode)
-         (python-mode . anaconda-eldoc-mode)))
-
-(use-package company-anaconda
-  :ensure t
-  :after (company anaconda-mode)
-  :config (add-to-list 'company-backends 'company-anaconda))
 
 (use-package ein
   :ensure t

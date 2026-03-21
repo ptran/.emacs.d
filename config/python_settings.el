@@ -19,7 +19,7 @@
   (setq python-indent-offset 4))
 
 ;; Display line number
-(add-hook 'python-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'python-mode-hook (lambda () (display-line-numbers-mode 1)))
 
 (use-package flycheck
   :after python

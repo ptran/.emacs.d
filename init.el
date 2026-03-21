@@ -24,7 +24,7 @@
 (setq use-package-verbose t)
 (eval-when-compile (require 'use-package))
 (require 'bind-key)
-(require 'cl)
+(require 'cl-lib)
 
 ;; Compile elisp
 (use-package auto-compile

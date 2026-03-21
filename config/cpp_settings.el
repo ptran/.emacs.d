@@ -17,8 +17,8 @@
   (add-hook 'c-mode-hook #'my/c-mode-hook)
   (add-hook 'c++-mode-hook #'my/c-mode-hook)
   ;; Display line numbers
-  (add-hook 'c-mode-hook #'linum-mode)
-  (add-hook 'c++-mode-hook #'linum-mode)
+  (add-hook 'c-mode-hook #'display-line-numbers-mode)
+  (add-hook 'c++-mode-hook #'display-line-numbers-mode)
   ;; Open .h files in c++ mode
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 

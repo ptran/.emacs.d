@@ -65,6 +65,10 @@
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
 
+;; Performance optimizations
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq process-adaptive-read-buffering nil)
+
 ;; Display column and line numbers
 (line-number-mode 1)
 (column-number-mode 1)
@@ -117,8 +121,13 @@
 ;; Prevent eshell from shifting to the bottom of the buffer after executing a command
 ;; https://emacs.stackexchange.com/questions/28819/eshell-goes-to-the-bottom-of-the-page-after-executing-a-command/28821
 (defun my/eshell-mode-setup ()
-            (remove-hook 'eshell-output-filter-functions
-                         'eshell-postoutput-scroll-to-bottom))
+  (remove-hook 'eshell-output-filter-functions
+               'eshell-postoutput-scroll-to-bottom)
+  ;; Stop completion and syntax checking from lagging the shell
+  (company-mode -1)
+  (when (fboundp 'flycheck-mode)
+    (flycheck-mode -1)))
+
 (add-hook 'eshell-mode-hook 'my/eshell-mode-setup)
 
 ;; Indentation for org source code blocks
@@ -183,15 +192,13 @@
 
 ;; fill Column Indicator
 ;; ---------------------
-(use-package fill-column-indicator
-  :ensure t
+(use-package display-fill-column-indicator
   :init
   (setq-default fill-column 120)
-  (setq-default fci-rule-color "gray")
-  (setq-default fci-rule-width 2)
-  (add-hook 'c-mode-hook #'fci-mode)
-  (add-hook 'c++-mode-hook #'fci-mode)
-  (add-hook 'python-mode-hook #'fci-mode))
+  :config
+  (add-hook 'c-mode-hook #'display-fill-column-indicator-mode)
+  (add-hook 'c++-mode-hook #'display-fill-column-indicator-mode)
+  (add-hook 'python-mode-hook #'display-fill-column-indicator-mode))
 
 ;; whitespace
 ;; ----------
@@ -324,8 +331,10 @@
   :config
   (evil-mode 1)
   ;; Use Emacs state in these additional modes.
-  (dolist (mode '(dired-mode eshell-mode grep-mode))
-    (add-to-list 'evil-emacs-state-modes mode))
+  (defun my/evil-emacs-state-modes-setup ()
+    (dolist (mode '(dired-mode eshell-mode grep-mode))
+      (add-to-list 'evil-emacs-state-modes mode)))
+  (my/evil-emacs-state-modes-setup)
 
   ;; Remove Insert mode from eshell
   (delete 'eshell-mode evil-insert-state-modes)
@@ -405,10 +414,6 @@
   :ensure t
   :custom (evil-collection-setup-minibuffer t)
   :init (evil-collection-init))
-
-(use-package evil-magit
-  :after evil magit
-  :ensure t)
 
 ;; mac-key-mode
 ;; ------------

@@ -1,6 +1,0 @@
-# key: forauto
-# name: for auto
-# --
-for (auto${1:&} ${2:item} : ${3:vec}) {
-    $0
-}

@@ -1,4 +1,0 @@
-# key: setq
-# name: set quoted variable
-# --
-(setq ${1:var} ${2:arg})

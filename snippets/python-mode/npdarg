@@ -1,5 +1,0 @@
-# key: npdarg
-# name: numpydoc argument
-# --
-${1:arg} : ${2:type}
-    $0

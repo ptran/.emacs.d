@@ -1,4 +1,0 @@
-# key: nparr
-# name: numpy array
-# --
-np.array({$1:[]}, dtype={$2:'float32'})

@@ -1,5 +1,19 @@
 ;;; packages.el --- Core Infrastructure Packages -*- lexical-binding: t; -*-
 
+;; Set undo system for Evil BEFORE loading it
+(setq evil-undo-system 'undo-tree)
+
+;; Undo Tree
+(use-package undo-tree
+  :ensure t
+  :demand t
+  :bind (("C-x u" . undo-tree-visualize))
+  :diminish undo-tree-mode
+  :init
+  (setq undo-tree-history-directory-alist `(("." . ,my/emacs-auto-save-dir)))
+  :config
+  (global-undo-tree-mode 1))
+
 ;; Ivy / Counsel
 (use-package ivy
   :ensure t
@@ -83,7 +97,6 @@
   :ensure t
   :init
   (setq evil-want-integration t)
-  (setq evil-undo-system 'undo-tree)
   :config
   (define-key evil-motion-state-map (kbd "SPC") nil)
   (evil-mode 1)

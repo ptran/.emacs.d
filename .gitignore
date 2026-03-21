@@ -12,6 +12,7 @@ backup/*
 !auto-save/.keep
 !backup/.keep
 eln-cache/
+transient/
 
 recentf
 projectile*

@@ -1,5 +1,8 @@
 ;; init.el --- Philip Tran's Emacs Configuration -*- lexical-binding: t; -*-
 
+;; Fix for evil-collection: must be set before any evil packages load
+(setq evil-want-keybinding nil)
+
 ;; Set emacs directory
 (defvar my/dot-d-dir (expand-file-name "~/.emacs.d/") ".emacs.d location")
 (defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")

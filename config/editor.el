@@ -48,17 +48,6 @@
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (setq set-mark-command-repeat-pop t)
 
-;; Undo Tree
-(use-package undo-tree
-  :ensure t
-  :demand t
-  :bind (("C-x u" . undo-tree-visualize))
-  :diminish undo-tree-mode
-  :init
-  (setq undo-tree-history-directory-alist `(("." . ,my/emacs-auto-save-dir)))
-  :config
-  (global-undo-tree-mode 1))
-
 ;; Whitespace
 (use-package whitespace
   :ensure t

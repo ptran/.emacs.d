@@ -1,10 +1,13 @@
-;; init.el
-;;
-;; Author:  Philip Tran
-;; URL:     https://github.com/ptran/.emacs.d
+;; init.el --- Philip Tran's Emacs Configuration -*- lexical-binding: t; -*-
 
 ;; Set emacs directory
 (defvar my/dot-d-dir (expand-file-name "~/.emacs.d/") ".emacs.d location")
+(defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
+(defvar my/emacs-auto-save-dir (concat my/dot-d-dir "auto-save") "Directory for auto-save files")
+
+;; Org Files
+(defvar my/org-task-file "/home/ptran/Dropbox/Documents/Org/todo.org" "Org file for keeping track of tasks")
+(defvar my/org-notes-file "/home/ptran/Dropbox/Documents/Org/notes.org" "Org file for taking notes")
 
 ;; Package management
 (require 'package)
@@ -15,8 +18,8 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-;; Add packages to the load
-(add-to-list 'load-path (concat my/dot-d-dir "packages"))
+;; Add config to load-path
+(add-to-list 'load-path (concat my/dot-d-dir "config"))
 
 ;; Setup use-package
 (unless (package-installed-p 'use-package)
@@ -26,19 +29,18 @@
 (require 'bind-key)
 (require 'cl-lib)
 
-;; Compile elisp
+;; Auto-compile elisp for performance
 (use-package auto-compile
   :ensure t
-  :init
-  (setq load-prefer-newer t)
-  :config
-  (auto-compile-on-load-mode))
+  :init (setq load-prefer-newer t)
+  :config (auto-compile-on-load-mode))
 
-;; Load configurations
-(load (concat my/dot-d-dir "config/global_settings.el"))
-(load (concat my/dot-d-dir "config/elisp_settings.el"))
-(load (concat my/dot-d-dir "config/cpp_settings.el"))
-(load (concat my/dot-d-dir "config/python_settings.el"))
-(load (concat my/dot-d-dir "config/org_settings.el"))
-(load (concat my/dot-d-dir "config/latex_settings.el"))
-(load (concat my/dot-d-dir "config/web_settings.el"))
+;; Load core configuration categories
+(require 'ui)
+(require 'editor)
+(require 'packages)
+(require 'languages)
+
+;; Store custom settings separately
+(setq custom-file (concat my/dot-d-dir "custom.el"))
+(load custom-file 'noerror)

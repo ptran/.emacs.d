@@ -21,3 +21,4 @@ session*
 
 custom.el
 \n*.undo-tree~
+\n*.~undo-tree~

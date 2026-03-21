@@ -3,6 +3,9 @@
 ;; Author:  Philip Tran
 ;; URL:     https://github.com/ptran/.emacs.d
 
+;; Fix for evil-collection: must be set before any evil packages load
+(setq evil-want-keybinding nil)
+
 ;;
 (defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
 (defvar my/emacs-auto-save-dir (concat my/dot-d-dir "auto-save") "Directory for auto-save files")
@@ -330,15 +333,53 @@
       (browse-url url)))
   (setq flymd-browser-open-function 'my/flymd-browser-function))
 
+;; evil-leader
+;; -----------
+(use-package evil-leader
+  :ensure t
+  :config
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "."   'mode-line-other-buffer
+    ":"   'eval-expression
+    "b"   'ivy-switch-buffer
+    "a"   'counsel-projectile-find-file ; "a" for all files in project
+    "f"   'counsel-find-file
+    "k"   'kill-this-buffer
+    "l"   'whitespace-mode
+    "L"   'delete-trailing-whitespace
+    "m"   'magit-status
+    "pp"  'projectile-switch-project
+    "pb"  'projectile-switch-to-buffer
+    "pf"  'projectile-find-file
+    "pj"  'projectile-find-tag
+    "psg" 'projectile-grep
+    "py"  'counsel-yank-pop
+    "s"   'swiper
+    "t"   'eshell             ; "t" for terminal
+    "wd"  'delete-window      ; "d" for delete
+    "wm"  'delete-other-windows ; "m" for maximize
+    "ws"  'split-window-below ; "s" for split
+    "wv"  'split-window-right ; "v" for vertical
+    "wh"  'windmove-left
+    "wj"  'windmove-down
+    "wk"  'windmove-up
+    "wl"  'windmove-right
+    "ww"  'other-window  ; "other window" cycle
+    "x"   'counsel-M-x
+    "y"   'ivy-yasnippet)
+  (global-evil-leader-mode))
+
 ;; evil
 ;; ----
 (use-package evil
   :ensure t
   :init
-  (setq evil-want-keybinding nil)
   (setq evil-want-integration t)
   (setq evil-undo-system 'undo-tree) ; Use undo-tree for C-r (redo)
   :config
+  ;; Ensure SPC is not bound in evil maps so evil-leader can use it
+  (define-key evil-motion-state-map (kbd "SPC") nil)
   (evil-mode 1)
   ;; Use Emacs state in these additional modes.
   (defun my/evil-emacs-state-modes-setup ()
@@ -373,42 +414,6 @@
   ;; Visual
   (define-key evil-visual-state-map "\C-w" 'evil-delete)
   (define-key evil-visual-state-map "\C-y" 'yank))
-
-(use-package evil-leader
-  :after evil
-  :ensure t
-  :config
-  (evil-leader/set-leader ",")
-  (evil-leader/set-key
-    "."   'mode-line-other-buffer
-    ":"   'eval-expression
-    "b"   'ivy-switch-buffer
-    "a"   'counsel-projectile-find-file ; "a" for all files in project
-    "f"   'counsel-find-file
-    "k"   'kill-this-buffer
-    "l"   'whitespace-mode
-    "L"   'delete-trailing-whitespace
-    "m"   'magit-status
-    "pp"  'projectile-switch-project
-    "pb"  'projectile-switch-to-buffer
-    "pf"  'projectile-find-file
-    "pj"  'projectile-find-tag
-    "psg" 'projectile-grep
-    "py"  'counsel-yank-pop
-    "s"   'swiper
-    "t"   'eshell             ; "t" for terminal
-    "wd"  'delete-window      ; "d" for delete
-    "wm"  'delete-other-windows ; "m" for maximize
-    "ws"  'split-window-below ; "s" for split
-    "wv"  'split-window-right ; "v" for vertical
-    "wh"  'windmove-left
-    "wj"  'windmove-down
-    "wk"  'windmove-up
-    "wl"  'windmove-right
-    "ww"  'other-window  ; "other window" cycle
-    "x"   'counsel-M-x
-    "y"   'ivy-yasnippet)
-  (global-evil-leader-mode))
 
 (use-package evil-surround
   :after evil

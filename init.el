@@ -8,10 +8,6 @@
 (defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
 (defvar my/emacs-auto-save-dir (concat my/dot-d-dir "auto-save") "Directory for auto-save files")
 
-;; Org Files
-(defvar my/org-task-file "/home/ptran/Dropbox/Documents/Org/todo.org" "Org file for keeping track of tasks")
-(defvar my/org-notes-file "/home/ptran/Dropbox/Documents/Org/notes.org" "Org file for taking notes")
-
 ;; Package management
 (require 'package)
 (unless (assoc-default "melpa" package-archives)

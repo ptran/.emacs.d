@@ -101,25 +101,6 @@
   :ensure t
   :if (executable-find "jupyter"))
 
-;; Org Mode
-(use-package org
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture))
-  :config
-  (setq org-agenda-files `(,my/org-task-file))
-  (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
-  (setq org-log-done t)
-  (add-hook 'org-mode-hook #'org-indent-mode)
-  (setq org-confirm-babel-evaluate nil)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t) (python . t) (ledger . t))))
-
-(use-package org-bullets
-  :ensure t
-  :hook (org-mode . org-bullets-mode))
-
 ;; Web Mode
 (use-package web-mode
   :ensure t

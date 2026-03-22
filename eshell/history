@@ -1,0 +1,7 @@
+ls -la
+clear
+exit
+git status
+git diff
+clear
+exit

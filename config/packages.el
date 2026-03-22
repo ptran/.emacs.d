@@ -79,7 +79,6 @@
     "psg" 'projectile-grep
     "py"  'counsel-yank-pop
     "s"   'swiper
-    "t"   'eshell
     "wd"  'delete-window
     "wm"  'delete-other-windows
     "ws"  'split-window-below

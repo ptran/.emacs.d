@@ -1,25 +1,22 @@
-anaconda-mode
-auto-save-list
-bookmarks
-elpa
-eshell
-irony
-request
-url
+# Compiled Emacs Lisp
+*.elc
 
-auto-save/*
-backup/*
-!auto-save/.keep
-!backup/.keep
+# Package management
+elpa/
+straight/
+
+# Temporary files
+*~
+\#*\#
+.\#*
+auto-save-list/
+auto-save/
+backup/
 eln-cache/
-transient/
 
-recentf
-projectile*
-semanticdb
-session*
-*.dat
-
+# Custom settings
 custom.el
-\n*.undo-tree~
-\n*.~undo-tree~
+
+# Undo-tree history
+*.undo-tree~
+*.~undo-tree~

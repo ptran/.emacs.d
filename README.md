@@ -5,7 +5,7 @@ A high-performance Emacs 29+ configuration designed for speed, mnemonic efficien
 ## Core Features
 
 - **Modal Editing:** Full Evil-mode integration with a Spacebar leader key.
-- **AI Integration:** Integrated gptel for seamless access to LLMs (Gemini, Claude) directly in any buffer.
+- **AI Integration:** Integrated agent-shell for a native Emacs interface to LLM agents (Gemini, Claude) using the Agent Client Protocol.
 - **Language Intelligence:** Native LSP support via Eglot for C++ (clangd) and Python (pyright).
 - **Git Integration:** Magit interface with diff-hl fringe indicators for real-time status tracking.
 - **Modern Interface:** High-contrast Kaolin themes and Smart-mode-line for a polished, functional UI.
@@ -30,7 +30,7 @@ The leader key is set to **SPC**. Commands are grouped by logical mnemonics for 
 | SPC w d | Delete Window | Window Delete |
 | SPC w m | Maximize Window | Window Maximize |
 | SPC p f | Find File in Project | Project File |
-| SPC g | Open AI Chat | Gptel / AI |
+| SPC a | Open AI Agent Shell | Agent |
 | SPC m | Magit Status | Magit |
 
 ## Installation

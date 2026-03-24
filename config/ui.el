@@ -1,28 +1,25 @@
 ;;; ui.el --- UI and Appearance Settings -*- lexical-binding: t; -*-
 
-;; Fonts
-(setq my/font-type "Source Code Pro:antialiasing=True:hinting=True")
-(setq my/font-size 130)
+;; --- Fonts
+(defvar my/font-size 130)
+(defvar my/font-fallbacks 
+  '("JetBrains Mono" "Source Code Pro" "Hack" "Menlo" "DejaVu Sans Mono" "Ubuntu Mono" "Monospace"))
 
-(defun font-exists-p (font)
-  "Check if font exists"
-  (if (null (x-list-fonts font)) nil t))
+(defun my/set-best-font (&optional frame)
+  "Configure the best available font and apply OS-specific rendering optimizations."
+  (when-let ((font (cl-find-if (lambda (f) (x-list-fonts f)) my/font-fallbacks)))
+    (let ((font-spec (if (eq system-type 'gnu/linux) (concat font ":antialias=true:hinting=true") font)))
+      (set-face-attribute 'default frame :font font-spec :height my/font-size)))
+  
+  ;; macOS Visual Polish
+  (when (and (eq system-type 'darwin) (display-graphic-p))
+    (set-frame-parameter frame 'ns-appearance 'dark)
+    (set-frame-parameter frame 'ns-transparent-titlebar t)))
 
-(if (display-graphic-p)
-    (when (font-exists-p my/font-type)
-      (set-face-attribute 'default nil :font my/font-type)))
-(set-face-attribute 'default nil :height my/font-size)
+(if (display-graphic-p) (my/set-best-font))
+(add-hook 'after-make-frame-functions #'my/set-best-font)
 
-;; Daemon font support
-(defun my/set-frame-font (frame)
-  (select-frame frame)
-  (when (font-exists-p my/font-type)
-    (set-frame-font my/font-type)))
-
-(if (daemonp)
-    (add-hook 'after-make-frame-functions #'my/set-frame-font))
-
-;; Clean up UI
+;; --- Clean up UI
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -31,7 +28,7 @@
 (column-number-mode 1)
 (global-font-lock-mode 1)
 
-;; Themes & Mode Line
+;; --- Themes & Mode Line
 (use-package kaolin-themes
   :ensure t
   :config
@@ -45,14 +42,14 @@
   :config
   (sml/setup))
 
-;; Parentheses
+;; --- Parentheses
 (use-package highlight-parentheses
   :ensure t
   :config
-  (setq hl-paren-colors '("DarkSeaGreen1" "SeaGreen1" "SeaGreen3" "SeaGreen4"))
+  (setq highlight-parentheses-colors '("DarkSeaGreen1" "SeaGreen1" "SeaGreen3" "SeaGreen4"))
   (add-hook 'prog-mode-hook (lambda () (highlight-parentheses-mode t))))
 
-;; Fringe indicators
+;; --- Fringe indicators
 (use-package display-fill-column-indicator
   :init
   (setq-default fill-column 120)

@@ -1,5 +1,8 @@
 ;; init.el --- Philip Tran's Emacs Configuration -*- lexical-binding: t; -*-
 
+;; Silence asynchronous native compilation warnings
+(setq native-comp-async-report-warnings-errors nil)
+
 ;; Set emacs directory
 (defvar my/dot-d-dir (expand-file-name "~/.emacs.d/") ".emacs.d location")
 (defvar my/emacs-backup-dir (concat my/dot-d-dir "backup") "Directory for backup files")
@@ -32,9 +35,9 @@
   :config (auto-compile-on-load-mode))
 
 ;; Load core configuration categories
+(require 'packages)
 (require 'ui)
 (require 'editor)
-(require 'packages)
 (require 'languages)
 
 ;; Store custom settings separately

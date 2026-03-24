@@ -17,6 +17,18 @@ eln-cache/
 # Custom settings
 custom.el
 
+# Runtime history and cache
+projectile-bookmarks.eld
+recentf
+savehist
+url/
+transient/
+eshell/history
+
 # Undo-tree history
 *.undo-tree~
 *.~undo-tree~
+
+# Agent shell
+.agent-shell/
+agent/

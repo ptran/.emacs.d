@@ -1,17 +1,18 @@
 ;;; languages.el --- Language Specific Configurations -*- lexical-binding: t; -*-
 
-;; Emacs Lisp
+;; --- Emacs Lisp
 (use-package elisp-mode
   :mode ("\\.el\\'" . emacs-lisp-mode)
-  :config
+  :preface
   (defun my/emacs-lisp-mode-hook ()
     (setq indent-tabs-mode nil)
     (display-line-numbers-mode 1)
     (define-key emacs-lisp-mode-map (kbd "C-x C-e") 'pp-eval-last-sexp))
+  :config
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
   (add-hook 'emacs-lisp-mode-hook #'my/emacs-lisp-mode-hook))
 
-;; LSP Support (Eglot)
+;; --- LSP Support (Eglot)
 (use-package eglot
   :ensure t
   :bind (:map eglot-mode-map
@@ -21,7 +22,7 @@
   (add-to-list 'eglot-server-programs
                `((c++-mode c-mode) . ("/opt/homebrew/opt/llvm/bin/clangd" "--header-insertion=never"))))
 
-;; C / C++ / CUDA
+;; --- C / C++ / CUDA
 (use-package cc-mode
   :mode (("\\.h\\'" . c++-mode)
          ("\\.cu\\'" . cuda-mode)
@@ -36,18 +37,18 @@
     (c-set-offset 'arglist-close 0)
     (c-set-offset 'inlambda 0)
     (c-set-offset 'substatement-open 0))
+  (defvar my/cmake-build-dir "build")
   :config
   (add-hook 'c-mode-hook #'my/c-mode-hook)
   (add-hook 'c++-mode-hook #'my/c-mode-hook)
   (add-hook 'c-mode-hook #'display-line-numbers-mode)
   (add-hook 'c++-mode-hook #'display-line-numbers-mode)
   
-  ;; Build Command
   (defun my/build-cmake-project (&optional cmake-args)
     "Build CMake project for current buffer."
     (interactive)
     (let* ((root (projectile-project-root))
-           (build-dir (concat root "build"))
+           (build-dir (concat root my/cmake-build-dir))
            (cmake-cmd (concat "cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON " cmake-args))
            (build-cmd (if (string-equal system-type "windows-nt")
                           "cmake --build . --config Release"
@@ -60,12 +61,14 @@
 (use-package cmake-mode
   :ensure t
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")
+  :preface
+  (declare-function my/build-cmake-project "languages")
   :config
   (add-hook 'cmake-mode-hook (lambda () (define-key cmake-mode-map (kbd "C-c m") #'my/build-cmake-project))))
 
 (use-package cuda-mode :ensure t)
 
-;; Python
+;; --- Python
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
@@ -84,7 +87,7 @@
   :ensure t
   :if (executable-find "jupyter"))
 
-;; Web Mode
+;; --- Web Mode
 (use-package web-mode
   :ensure t
   :mode ("\\.html?\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'" "\\.erb\\'" "\\.css\\'" "\\.js\\'")
@@ -94,10 +97,13 @@
         web-mode-code-indent-offset 2)
   (setq web-mode-engines-alist '(("jinja" . "\\.html?\\'"))))
 
-;; LaTeX
+;; --- LaTeX
 (use-package tex
   :ensure auctex
   :if (executable-find "tex")
+  :preface
+  (defvar reftex-plug-into-AUCTeX)
+  (declare-function LaTeX-math-mode "ext:latex")
   :config
   (setq TeX-auto-save t
         TeX-parse-self t

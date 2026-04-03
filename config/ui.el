@@ -29,10 +29,28 @@
 (global-font-lock-mode 1)
 
 ;; --- Themes & Mode Line
+(defvar my/active-theme 'nord ; Set to 'catppuccin, 'kaolin, or 'nord
+  "The current active theme.")
+
 (use-package kaolin-themes
   :ensure t
+  :if (eq my/active-theme 'kaolin)
   :config
-  (load-theme 'kaolin-temple t))
+  (load-theme 'kaolin-galaxy t))
+
+(use-package catppuccin-theme
+  :ensure t
+  :if (eq my/active-theme 'catppuccin)
+  :init
+  (setq catppuccin-flavor 'mocha) ; 'latte, 'frappe, 'macchiato, or 'mocha
+  :config
+  (load-theme 'catppuccin t))
+
+(use-package nord-theme
+  :ensure t
+  :if (eq my/active-theme 'nord)
+  :config
+  (load-theme 'nord t))
 
 (use-package smart-mode-line
   :ensure t

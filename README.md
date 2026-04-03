@@ -4,34 +4,54 @@ A high-performance Emacs 29+ configuration designed for speed, mnemonic efficien
 
 ## Core Features
 
-- **Modal Editing:** Full Evil-mode integration with a Spacebar leader key.
-- **AI Integration:** Integrated agent-shell for a native Emacs interface to LLM agents (Gemini, Claude) using the Agent Client Protocol.
-- **Language Intelligence:** Native LSP support via Eglot for C++ (clangd) and Python (pyright).
+- **Modal Editing:** Full Evil-mode integration with a Spacebar leader key and `undo-tree` visualization.
+- **AI Integration:** 
+  - **gptel:** Native LLM interaction (Gemini) for chatting and on-the-fly code rewriting.
+  - **agent-shell:** Interface for Agent Client Protocol (ACP) compliant LLM agents.
+- **Language Intelligence:** Native LSP support via Eglot for C++, Python, and more.
+- **Expanded Support:** Optimized environments for CUDA, CMake, Web development (HTML/CSS/JS), and LaTeX.
 - **Git Integration:** Magit interface with diff-hl fringe indicators for real-time status tracking.
-- **Modern Interface:** High-contrast Kaolin themes and Smart-mode-line for a polished, functional UI.
+- **Modern Interface:** High-contrast Kaolin themes, Smart-mode-line, and contextual parenthesis highlighting.
 
 ## Configuration Structure
 
-The configuration is organized into logical modules within the `config/` directory to ensure maintainability and deferred loading:
+The configuration is organized into logical modules within the `config/` directory:
 
-- `ui.el`: Visuals, fonts (Source Code Pro), and theme settings.
+- `ui.el`: Visuals, font management (JetBrains Mono/Source Code Pro), and theme settings.
 - `editor.el`: Global behavior, performance optimizations, and system-specific key handling.
-- `packages.el`: Core infrastructure including Evil, Ivy, Projectile, and Undo-tree.
-- `languages.el`: Consolidated support for Elisp, C++, Python, Web, and LaTeX.
+- `packages.el`: Core infrastructure including Evil, Ivy/Counsel, Projectile, and AI packages.
+- `languages.el`: Consolidated support for Elisp, C/C++, CUDA, Python, Web, CMake, and LaTeX.
 
 ## Essential Mnemonic Keybindings
 
-The leader key is set to **SPC**. Commands are grouped by logical mnemonics for rapid access:
+The leader key is set to **SPC**. Commands are grouped by logical mnemonics:
 
+### Navigation & Buffers
 | Key | Action | Mnemonic |
 | :--- | :--- | :--- |
-| SPC w s | Split Window Below | Window Split |
-| SPC w v | Split Window Right | Window Vertical |
-| SPC w d | Delete Window | Window Delete |
+| SPC b | Switch Buffer | Buffer |
+| SPC k | Kill Buffer | Kill |
+| SPC s | Swiper Search | Swiper |
+| SPC w [h/j/k/l] | Navigate Windows | Window Left/Down/Up/Right |
+| SPC w s / v | Split Window (Horiz/Vert) | Window Split/Vertical |
 | SPC w m | Maximize Window | Window Maximize |
+
+### Project & Search
+| Key | Action | Mnemonic |
+| :--- | :--- | :--- |
+| SPC p p | Switch Project | Project |
 | SPC p f | Find File in Project | Project File |
+| SPC p b | Switch Project Buffer | Project Buffer |
+| SPC p s g | Project Grep | Project Search Grep |
+| SPC x | M-x (Command Palette) | execute |
+
+### AI & Tools
+| Key | Action | Mnemonic |
+| :--- | :--- | :--- |
+| SPC g | gptel Menu (Gemini) | gptel |
 | SPC a | Open AI Agent Shell | Agent |
 | SPC m | Magit Status | Magit |
+| SPC : | Eval Expression | : (Lisp) |
 
 ## Installation
 
@@ -50,12 +70,18 @@ sudo apt update
 sudo apt install emacs29
 ```
 
-### 2. Install Language Servers
+### 2. Install Language Servers & Tools
 
-For full IDE functionality, ensure the following are installed and available in your PATH:
-- **C++:** `clangd` (typically provided by the `llvm` package)
-- **Python:** `pyright`
+For full functionality, ensure the following are in your PATH:
+- **LSP:** `clangd` (C++), `pyright` (Python)
+- **Optional:** `ipython` & `jupyter` (Python/Notebooks), `texlive` (LaTeX)
 
-### 3. Final Setup
+### 3. Environment Variables
+To enable AI features, set your API keys in your shell environment (e.g., `~/.zshrc`):
+```bash
+export GEMINI_API_KEY="your-api-key-here"
+```
+
+### 4. Final Setup
 1. Clone this repository to `~/.emacs.d`.
-2. Launch Emacs. The `use-package` system will automatically download and configure all dependencies on the first startup.
+2. Launch Emacs. The `use-package` system will automatically download all dependencies.
